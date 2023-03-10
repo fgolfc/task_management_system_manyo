@@ -1,0 +1,15 @@
+2023-03-07 17:36:37.207 JST [41498] LOG:  starting PostgreSQL 14.7 (Homebrew) on aarch64-apple-darwin22.1.0, compiled by Apple clang version 14.0.0 (clang-1400.0.29.202), 64-bit
+2023-03-07 17:36:37.208 JST [41498] LOG:  listening on IPv6 address "::1", port 5432
+2023-03-07 17:36:37.209 JST [41498] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2023-03-07 17:36:37.209 JST [41498] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2023-03-07 17:36:37.212 JST [41499] LOG:  database system was shut down at 2023-03-07 17:22:06 JST
+2023-03-07 17:36:37.214 JST [41498] LOG:  database system is ready to accept connections
+2023-03-07 17:37:06.434 JST [41528] FATAL:  database "cdp_web_manyo_task_development" does not exist
+2023-03-07 17:37:58.928 JST [41563] FATAL:  lock file "postmaster.pid" already exists
+2023-03-07 17:37:58.928 JST [41563] HINT:  Is another postmaster (PID 41498) running in data directory "/opt/homebrew/var/postgresql@14"?
+2023-03-08 14:57:29.317 JST [65448] ERROR:  column "title" of relation "tasks" already exists
+2023-03-08 14:57:29.317 JST [65448] STATEMENT:  ALTER TABLE "tasks" ADD "title" character varying
+2023-03-08 17:57:54.120 JST [68851] ERROR:  column "title" of relation "tasks" already exists
+2023-03-08 17:57:54.120 JST [68851] STATEMENT:  ALTER TABLE "tasks" ADD "title" character varying
+2023-03-08 17:58:23.207 JST [68958] ERROR:  column "title" of relation "tasks" already exists
+2023-03-08 17:58:23.207 JST [68958] STATEMENT:  ALTER TABLE "tasks" ADD "title" character varying

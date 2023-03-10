@@ -1,0 +1,27 @@
+<% if flash[:notice] %>
+  <div class="notice"><%= flash[:notice] %></div>
+<% end %>
+
+<h1>Tasks Index Page</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Content</th>
+      <th>Created_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+      <tr>
+        <td><%= task.title %></td>
+        <td><%= task.content %></td>
+        <td><%= task.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></td>
+        <td><%= link_to "Show", task_path(task), class: "show-task" %></td>
+        <td><%= link_to "Edit", edit_task_path(task), class: "edit-task" %></td>
+        <td><%= link_to "Destroy", task_path(task), method: :delete, class: "destroy-task", data: {confirm: "Are you sure?" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

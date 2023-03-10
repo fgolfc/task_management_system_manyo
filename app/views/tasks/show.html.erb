@@ -1,0 +1,12 @@
+<% if flash[:notice] %>
+  <div class="notice"><%= flash[:notice] %></div>
+<% end %>
+
+<h1>Show Task Page</h1>
+
+<h1><%= @task.title %></h1>
+<p><%= @task.content %></p>
+<p><%= @task.created_at.strftime("%Y-%m-%d %H:%M:%S %Z") %></p>
+
+<%= link_to 'Edit', edit_task_path(@task), id: "edit-task" %> |
+<%= link_to 'Back', tasks_path, id: "back" %>

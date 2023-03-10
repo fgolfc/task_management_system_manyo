@@ -1,0 +1,35 @@
+<% if flash[:notice] %>
+  <div class="notice"><%= flash[:notice] %></div>
+<% end %>
+
+<h1>New Task Page</h1>
+
+<%= form_with(model: @task, local: true) do |form| %>
+  <% if @task.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+
+      <ul>
+      <% @task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :content %><br>
+    <%= form.text_area :content %>
+  </div>
+  
+    <div class="actions">
+      <%= form.submit "Create Task", id: "create-task" %>
+    </div>
+  <% end %>
+
+<%= link_to 'Back', tasks_path, id: "back" %>
