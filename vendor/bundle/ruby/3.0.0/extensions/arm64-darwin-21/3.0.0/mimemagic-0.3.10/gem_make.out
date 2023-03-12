@@ -1,0 +1,3 @@
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/mimemagic-0.3.10/ext/mimemagic
+/Users/fujim/.rbenv/versions/3.0.1/bin/ruby -I/Users/fujim/.rbenv/versions/3.0.1/lib/ruby/3.0.0 -rrubygems /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/rake-13.0.6/exe/rake RUBYARCHDIR\=/Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/extensions/arm64-darwin-21/3.0.0/mimemagic-0.3.10 RUBYLIBDIR\=/Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/extensions/arm64-darwin-21/3.0.0/mimemagic-0.3.10
+mkdir -p /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/extensions/arm64-darwin-21/3.0.0/mimemagic-0.3.10/mimemagic

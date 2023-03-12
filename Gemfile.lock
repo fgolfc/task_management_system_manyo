@@ -116,8 +116,6 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.12.4-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.12.4-x86_64-linux)
-      racc (~> 1.4)
     pg (1.2.3)
     public_suffix (4.0.6)
     puma (4.3.8)
@@ -148,6 +146,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.2)
       loofah (~> 2.3)
+    rails-i18n (7.0.1)
+      i18n (>= 0.7, < 2)
+      railties (>= 6.0.0, < 8)
     railties (6.0.3)
       actionpack (= 6.0.3)
       activesupport (= 6.0.3)
@@ -231,9 +232,7 @@ GEM
     zeitwerk (2.4.2)
 
 PLATFORMS
-  arm64-darwin-20
   arm64-darwin-21
-  x86_64-linux
 
 DEPENDENCIES
   better_errors
@@ -247,6 +246,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (= 6.0.3)
+  rails-i18n
   rexml
   rspec-rails
   sass-rails (>= 6)

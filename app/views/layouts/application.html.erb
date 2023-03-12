@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <p id="notice"></p>
+    <% flash.each do |key, value| %>
+      <%= content_tag(:div, value, class: "#{key}") %>
+    <% end %>
+    
     <title>CdpWebManyoTask</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,8 +16,8 @@
 
   <body>
     <ul>
-      <li><%= link_to "Tasks Index", tasks_path, id: "tasks-index" %></li>
-      <li><%= link_to "New Task", new_task_path, id: "new-task" %></li>
+      <li><%= link_to t("tasks.index.title"), tasks_path, id: "tasks-index" %></li>
+      <li><%= link_to t("tasks.new.title"), new_task_path, id: "new-task" %></li>
     </ul>
     <%= yield %>
   </body>
