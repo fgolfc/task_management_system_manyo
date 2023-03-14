@@ -11,6 +11,8 @@ require 'factory_bot_rails'
 date = Date.new(2025, 2, 18)
 
 50.times do |n|
+  next if n.zero?
   created_at = date -= 1
-  task = FactoryBot.create(:task, title: "#{n}#{n.ordinal}_task", created_at: created_at)
+  title = "#{ActiveSupport::Inflector.ordinalize(n)}_task"
+  task = FactoryBot.create(:task, title: title, created_at: created_at)
 end
