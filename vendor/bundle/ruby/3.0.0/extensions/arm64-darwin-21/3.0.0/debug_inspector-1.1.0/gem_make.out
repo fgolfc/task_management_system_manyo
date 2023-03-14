@@ -1,0 +1,15 @@
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/debug_inspector-1.1.0/ext/debug_inspector
+/Users/fujim/.rbenv/versions/3.0.1/bin/ruby -I /Users/fujim/.rbenv/versions/3.0.1/lib/ruby/3.0.0 -r ./siteconf20230312-4378-e4wiw7.rb extconf.rb
+creating Makefile
+
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/debug_inspector-1.1.0/ext/debug_inspector
+make DESTDIR\= clean
+
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/debug_inspector-1.1.0/ext/debug_inspector
+make DESTDIR\=
+compiling debug_inspector.c
+linking shared-object debug_inspector.bundle
+
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/debug_inspector-1.1.0/ext/debug_inspector
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 debug_inspector.bundle ./.gem.20230312-4378-vm5f1j

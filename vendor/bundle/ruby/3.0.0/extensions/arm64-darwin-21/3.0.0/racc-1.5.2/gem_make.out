@@ -1,0 +1,16 @@
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/racc-1.5.2/ext/racc/cparse
+/Users/fujim/.rbenv/versions/3.0.1/bin/ruby -I /Users/fujim/.rbenv/versions/3.0.1/lib/ruby/3.0.0 -r ./siteconf20230312-4378-134zxy.rb extconf.rb
+checking for rb_ary_subseq()... yes
+creating Makefile
+
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/racc-1.5.2/ext/racc/cparse
+make DESTDIR\= clean
+
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/racc-1.5.2/ext/racc/cparse
+make DESTDIR\=
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+
+current directory: /Users/fujim/cdp_web_manyo_task/vendor/bundle/ruby/3.0.0/gems/racc-1.5.2/ext/racc/cparse
+make DESTDIR\= install
+/usr/bin/install -c -m 0755 cparse.bundle ./.gem.20230312-4378-bjc773/racc

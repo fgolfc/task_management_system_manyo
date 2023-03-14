@@ -1,13 +1,9 @@
-<% if flash[:notice] %>
-  <div class="notice"><%= flash[:notice] %></div>
-<% end %>
-
-<h1>New Task Page</h1>
+<h1><%= t(".title") %></h1>
 
 <%= form_with(model: @task, local: true) do |form| %>
   <% if @task.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@task.errors.count, "error") %> prohibited this task from being saved:</h2>
+      <h2><%= @task.errors.count %> 件のエラーが発生しました</h2>
 
       <ul>
       <% @task.errors.full_messages.each do |message| %>
@@ -28,8 +24,8 @@
   </div>
   
     <div class="actions">
-      <%= form.submit "Create Task", id: "create-task" %>
+      <%= form.submit t("activerecord.helpers.submit.create task"), id: "create-task" %>
     </div>
   <% end %>
 
-<%= link_to 'Back', tasks_path, id: "back" %>
+<%= link_to t("common.back"), tasks_path, id: "back" %>
