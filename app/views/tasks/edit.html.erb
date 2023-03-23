@@ -5,23 +5,38 @@
     <div id="error_explanation">
       <h2><%= @task.errors.count %> 件のエラーが発生しました</h2>
 
-    <ul>
-    <% @task.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
-    <% end %>
-    </ul>
+      <ul>
+      <% @task.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title, id: :task_title %>
   </div>
-<% end %>
 
-<div class="field">
-  <%= form.label :title %>
-  <%= form.text_field :title, id: :task_title %>
-</div>
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_area :content, id: :task_content %>
+  </div>
 
-<div class="field">
-  <%= form.label :content %>
-  <%= form.text_area :content, id: :task_content %>
-</div>
+  <div class="field">
+      <%= form.label :deadline %>
+    <%= form.date_select :deadline %>
+  </div>
+
+  <div class="field">
+    <%= form.label :priority %>
+    <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, selected: @task&.priority&.to_s) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status] || 'todo') %>
+  </div>
 
   <div class="actions">
     <%= form.submit t("common.update task"), id: "update-task" %>
