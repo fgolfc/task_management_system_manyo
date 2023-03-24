@@ -79,12 +79,9 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '検索機能' do
     let!(:task4) { FactoryBot.create(:task, title: 'forth_task', deadline: Date.new(2025, 02, 15), priority: :low, status: :done) }
   
-    before do
-      visit tasks_path
-    end
-  
     describe 'タイトルであいまい検索をした場合' do
       before do
+        visit tasks_path
         fill_in 'search_title', with: 'd_task'
         click_button('search_task')
       end
@@ -99,6 +96,7 @@ RSpec.describe 'タスク管理機能', type: :system do
   
     describe 'ステータスで検索した場合' do
       before do
+        visit tasks_path
         select('完了', from: 'task_status')
         click_button('search_task')
       end
@@ -113,10 +111,10 @@ RSpec.describe 'タスク管理機能', type: :system do
   
     describe 'タイトルとステータスで検索した場合' do
       before do
+        visit tasks_path
         select('完了', from: 'task_status')
         fill_in 'search_title', with: 'd_task'
         click_button('search_task')
-        sleep(7)
       end
   
       it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do

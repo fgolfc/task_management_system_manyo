@@ -35,7 +35,7 @@ class Task < ApplicationRecord
     statuses.map { |key, _value| [I18n.t("enums.task.status_enum.#{key}"), key] }
   end
   
-  scope :search_by_title, ->(search_title = nil) { where("title LIKE ?", "%#{search_title}%") if search_title.present? }
+  scope :search_by_title, ->(search_title = nil) { where('title LIKE :search_title', search_title: "%#{search_title.strip}%") if search_title.present? && !search_title.strip.empty? }
   scope :filter_by_status, ->(status) { where(status: status) }
   
   def self.search_tasks(search_title, status)

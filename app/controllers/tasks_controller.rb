@@ -9,21 +9,15 @@ class TasksController < ApplicationController
   end
 
   def search
-    title = params[:search] && params[:search][:title]
-    status = params[:search] && params[:search][:status]
-    @tasks = Task.search_tasks(title, status).page(params[:page]).per(10)
-    @search_params = params[:search]
-    @status_params = status
+    @tasks = Task.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
+    @search_params = { search_title: search_title_param, status: status_param }
     render 'index'
   end
   
   def index
-    if params[:search].present?
-      title = params[:search][:title]
-      status = params[:search][:status]
-      @tasks = Task.search_tasks(title, status).page(params[:page]).per(10)
-      @search_params = params[:search]
-      @status_params = status
+    if params.dig(:search).present?
+      @tasks = Task.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
+      @search_params = { search_title: search_title_param, status: status_param }
     else
       case params[:sort]
       when 'deadline_asc'
@@ -34,7 +28,7 @@ class TasksController < ApplicationController
         @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10)
       end
       @search_params = nil
-      @status_params = params[:status]
+      @status_params = params.dig(:status)
       @tasks = @tasks.filter_by_status(@status_params) if @status_params.present?
     end
   end
@@ -74,4 +68,13 @@ class TasksController < ApplicationController
   def task_params
     params.require(:task).permit(:title, :content, :deadline, :priority, :status)
   end
+
+  def search_title_param
+    params.dig(:search, :search_title)&.strip
+  end
+  
+  def status_param
+    params.dig(:search, :status)
+  end
+  
 end

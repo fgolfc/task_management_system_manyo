@@ -4,7 +4,7 @@
   <%= f.label :status, t("activerecord.attributes.task.status") %><br>
   <%= f.select :status, options_for_select(Task.statuses_i18n, params.dig(:search, :status)), { include_blank: true }, { name: "search[status]", class: "form-control", id: "task_status" } %><br>
   <%= f.label :search_title, t("activerecord.attributes.task.title") %><br>
-  <%= f.text_field :search_title, value: params[:search] && params[:search][:title], class: "search_input form-control", id: "task_search_title" %><br>
+  <%= f.text_field :search_title, name: 'search[search_title]', value: @search_params&.dig(:search_title), class: "search_input form-control", id: "search_title" %><br>
   <%= f.submit t("common.search"), class: "btn btn-primary", id: "search_task" %>
 <% end %>
 
