@@ -30,12 +30,12 @@
 
   <div class="field">
     <%= form.label :priority %>
-    <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, @task&.priority&.to_s), { include_blank: true } %>
+    <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, @task&.priority&.to_s), include_blank: true %>
   </div>
 
   <div class="field">
     <%= form.label :status %>
-    <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status] || '') %>
+    <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status]), include_blank: true %>
   </div>
 
   <div class="actions">

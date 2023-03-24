@@ -9,17 +9,21 @@ class TasksController < ApplicationController
   end
 
   def search
-    @tasks = Task.search_tasks(params.dig(:search, :title), params.dig(:search, :status)).page(params[:page]).per(10)
+    title = params[:search] && params[:search][:title]
+    status = params[:search] && params[:search][:status]
+    @tasks = Task.search_tasks(title, status).page(params[:page]).per(10)
     @search_params = params[:search]
-    @status_params = params.dig(:search, :status)
+    @status_params = status
     render 'index'
   end
   
   def index
     if params[:search].present?
-      @tasks = Task.search_tasks(params[:search][:title], nil).page(params[:page]).per(10)
+      title = params[:search][:title]
+      status = params[:search][:status]
+      @tasks = Task.search_tasks(title, status).page(params[:page]).per(10)
       @search_params = params[:search]
-      @status_params = nil
+      @status_params = status
     else
       case params[:sort]
       when 'deadline_asc'
@@ -31,9 +35,9 @@ class TasksController < ApplicationController
       end
       @search_params = nil
       @status_params = params[:status]
+      @tasks = @tasks.filter_by_status(@status_params) if @status_params.present?
     end
   end
-
 
   def create
     @task = Task.new(task_params)
