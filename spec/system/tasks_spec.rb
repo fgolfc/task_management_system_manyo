@@ -11,6 +11,9 @@ RSpec.describe 'タスク管理機能', type: :system do
         visit new_task_path
         fill_in 'タイトル', with: 'first_task'
         fill_in '内容', with: '企画書を作成する。'
+        fill_in'task_deadline', with: Date.new(2025, 02, 25)
+        select('低', from: 'task_priority')
+        select('完了', from: 'task_status')
         click_button '登録する'
       end
 
@@ -84,14 +87,13 @@ RSpec.describe 'タスク管理機能', type: :system do
       before do
         fill_in 'search_title', with: 'd_task'
         click_button('search_task')
-        sleep(7)
       end
   
       it "検索ワードを含むタスクのみ表示される" do
-        expect(page).to have_content task2.title
-        expect(page).to have_content task3.title
-        expect(page).not_to have_content task1.title
-        expect(page).not_to have_content task4.title
+        expect(page).to have_content(task2.title, wait: 10)
+        expect(page).to have_content(task3.title, wait: 10)
+        expect(page).not_to have_content(task1.title, wait: 10)
+        expect(page).not_to have_content(task4.title, wait: 10)
       end
     end
   
@@ -99,14 +101,13 @@ RSpec.describe 'タスク管理機能', type: :system do
       before do
         select('完了', from: 'task_status')
         click_button('search_task')
-        sleep(7)
       end
   
       it "検索したステータスに一致するタスクのみ表示される" do
-        expect(page).to have_content task3.title
-        expect(page).to have_content task4.title
-        expect(page).not_to have_content task1.title
-        expect(page).not_to have_content task2.title
+        expect(page).to have_content(task3.title, wait: 10)
+        expect(page).to have_content(task4.title, wait: 10)
+        expect(page).not_to have_content(task1.title, wait: 10)
+        expect(page).not_to have_content(task2.title, wait: 10)
       end
     end
   
@@ -119,10 +120,10 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
   
       it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
-        expect(page).to have_content task3.title
-        expect(page).not_to have_content task1.title
-        expect(page).not_to have_content task2.title
-        expect(page).not_to have_content task4.title
+        expect(page).to have_content(task3.title, wait: 10)
+        expect(page).not_to have_content(task1.title, wait: 10)
+        expect(page).not_to have_content(task2.title, wait: 10)
+        expect(page).not_to have_content(task4.title, wait: 10)
       end
     end
   end

@@ -35,13 +35,13 @@ class Task < ApplicationRecord
     statuses.map { |key, _value| [I18n.t("enums.task.status_enum.#{key}"), key] }
   end
 
-  scope :search_by_title, ->(search_title) { where("title LIKE ?", "%#{search_title}%") }
-  scope :filter_by_status, ->(status) { where(status: status) }
+  scope :search_by_title, ->(search_title = nil) { where("title LIKE ?", "%#{search_title}%") if search_title.present? }
+  scope :filter_by_status, ->(statuses) { where(status: statuses) }
 
   def self.search_tasks(search_title, status)
     tasks = all
     tasks = tasks.search_by_title(search_title) if search_title.present?
-    tasks = tasks.filter_by_status(status) if status.present?
-    tasks.order(deadline: :asc, created_at: :desc)
+    tasks = tasks.filter_by_status([status]) if status.present?
+    tasks.order(created_at: :desc)
   end
 end
