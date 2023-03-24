@@ -37,7 +37,7 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
 
     context '新たにタスクを作成した場合' do
-      let!(:new_task) { FactoryBot.create(:task, title: 'new_task_title', deadline: Date.new(2025, 02, 16), priority: 'low',status: 'done') }
+      let!(:new_task) { FactoryBot.create(:task, title: 'new_task_title', deadline: Date.new(2025, 02, 16), priority: :medium, status: :todo) }
       
       it '新しいタスクが一番上に表示される' do
         expect(Task.all.order(created_at: :desc).first).to eq new_task
@@ -73,49 +73,64 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
   end
       
-  describe '検索機能' do    
-    context 'タイトルであいまい検索をした場合' do
+  describe '検索機能' do
+    let!(:task4) { FactoryBot.create(:task, title: 'forth_task', deadline: Date.new(2025, 02, 15), priority: :low, status: :done) }
+  
+    before do
+      visit tasks_path
+    end
+  
+    describe 'タイトルであいまい検索をした場合' do
+      before do
+        fill_in 'search_title', with: 'd_task'
+        click_button('search_task')
+        sleep(7)
+      end
+  
       it "検索ワードを含むタスクのみ表示される" do
-        fill_in 'search_title', with: 'first'
-        click_button('#search_task')
-        sleep(5)
-        expect(page).to have_content task1.title
-        expect(page).not_to have_content task2.title
-        expect(page).not_to have_content task3.title
+        expect(page).to have_content task2.title
+        expect(page).to have_content task3.title
+        expect(page).not_to have_content task1.title
+        expect(page).not_to have_content task4.title
       end
     end
-    
-    context 'ステータスで検索した場合' do
+  
+    describe 'ステータスで検索した場合' do
+      before do
+        select('完了', from: 'task_status')
+        click_button('search_task')
+        sleep(7)
+      end
+  
       it "検索したステータスに一致するタスクのみ表示される" do
-        within_fieldset('フォームのタイトル') do
-          select(2, from: 'task_status')
-          click_button('search_task')
-        end
-        
-        sleep(5)
-        expect(page).to have_content task1.title
-        expect(page).not_to have_content task2.title
-        expect(page).not_to have_content task3.title
-      end
-    end
-    
-    context 'タイトルとステータスで検索した場合' do
-      it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
-        select(2, from: 'task_status')
-        fill_in 'search_title', with: 'first'
-        click_button('#search_task')
-        sleep(5)
+        expect(page).to have_content task3.title
+        expect(page).to have_content task4.title
         expect(page).not_to have_content task1.title
         expect(page).not_to have_content task2.title
+      end
+    end
+  
+    describe 'タイトルとステータスで検索した場合' do
+      before do
+        select('完了', from: 'task_status')
+        fill_in 'search_title', with: 'd_task'
+        click_button('search_task')
+        sleep(7)
+      end
+  
+      it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
         expect(page).to have_content task3.title
+        expect(page).not_to have_content task1.title
+        expect(page).not_to have_content task2.title
+        expect(page).not_to have_content task4.title
       end
     end
   end
-
+  
   describe '詳細表示機能' do
     context '任意のタスク詳細画面に遷移した場合' do
       before do
-        FactoryBot.create(:task)
+        FactoryBot.create(:task, deadline: Date.new(2025, 02, 16), priority: :medium, status: :todo)
         visit tasks_path
         click_on 'search_task'
       end
