@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe 'タスク管理機能', type: :system do
-  let!(:task1) { FactoryBot.create(:task, title: 'first_task', deadline: Date.new(2025, 02, 18), priority: :medium, status: :todo) }
-  let!(:task2) { FactoryBot.create(:task, title: 'second_task', deadline: Date.new(2025, 02, 17), priority: :high, status: :doing) }
-  let!(:task3) { FactoryBot.create(:task, title: 'third_task', deadline: Date.new(2025, 02, 16), priority: :low, status: :done) }
+  let!(:task1) { FactoryBot.create(:task, title: 'first_task', deadline_on: Date.new(2025, 02, 18), priority: :medium, status: :todo) }
+  let!(:task2) { FactoryBot.create(:task, title: 'second_task', deadline_on: Date.new(2025, 02, 17), priority: :high, status: :doing) }
+  let!(:task3) { FactoryBot.create(:task, title: 'third_task', deadline_on: Date.new(2025, 02, 16), priority: :low, status: :done) }
 
   describe '登録機能' do
     context 'タスクを登録した場合' do
@@ -11,7 +11,7 @@ RSpec.describe 'タスク管理機能', type: :system do
         visit new_task_path
         fill_in 'タイトル', with: 'first_task'
         fill_in '内容', with: '企画書を作成する。'
-        fill_in'task_deadline', with: Date.new(2025, 02, 25)
+        fill_in'task_deadline_on', with: Date.new(2025, 02, 25)
         select('低', from: 'task_priority')
         select('完了', from: 'task_status')
         click_button '登録する'
@@ -40,7 +40,7 @@ RSpec.describe 'タスク管理機能', type: :system do
     end
 
     context '新たにタスクを作成した場合' do
-      let!(:new_task) { FactoryBot.create(:task, title: 'new_task_title', deadline: Date.new(2025, 02, 16), priority: :medium, status: :todo) }
+      let!(:new_task) { FactoryBot.create(:task, title: 'new_task_title', deadline_on: Date.new(2025, 02, 16), priority: :medium, status: :todo) }
       
       it '新しいタスクが一番上に表示される' do
         expect(Task.all.order(created_at: :desc).first).to eq new_task
@@ -77,7 +77,7 @@ RSpec.describe 'タスク管理機能', type: :system do
   end
       
   describe '検索機能' do
-    let!(:task4) { FactoryBot.create(:task, title: 'forth_task', deadline: Date.new(2025, 02, 15), priority: :low, status: :done) }
+    let!(:task4) { FactoryBot.create(:task, title: 'forth_task', deadline_on: Date.new(2025, 02, 15), priority: :low, status: :done) }
   
     describe 'タイトルであいまい検索をした場合' do
       before do
@@ -129,7 +129,7 @@ RSpec.describe 'タスク管理機能', type: :system do
   describe '詳細表示機能' do
     context '任意のタスク詳細画面に遷移した場合' do
       before do
-        FactoryBot.create(:task, deadline: Date.new(2025, 02, 16), priority: :medium, status: :todo)
+        FactoryBot.create(:task, deadline_on: Date.new(2025, 02, 16), priority: :medium, status: :todo)
         visit tasks_path
         click_on 'search_task'
       end

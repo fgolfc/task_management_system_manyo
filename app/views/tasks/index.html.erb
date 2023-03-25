@@ -14,7 +14,7 @@
       <th><%= t("activerecord.attributes.task.title") %></th>
       <th><%= t("activerecord.attributes.task.content") %></th>
       <th><%= t("activerecord.attributes.task.created_at") %></th>
-      <th><%= link_to t("activerecord.attributes.task.deadline"), tasks_path(sort: 'deadline_asc'), id: "order_deadline" %></th>
+      <th><%= link_to t("activerecord.attributes.task.deadline_on"), tasks_path(sort: 'deadline_on_asc'), id: "order_deadline" %></th>
       <th><%= link_to t("activerecord.attributes.task.priority"), tasks_path(sort: 'priority_desc'), id: "order_priority" %></th>
       <th><%= t("activerecord.attributes.task.status") %></th>
     </tr>
@@ -25,7 +25,7 @@
         <td><%= task.title %></td>
         <td><%= task.content %></td>
         <td><%= task.created_at.strftime('%Y/%m/%d %H:%M') %></td>
-        <td><%= task.deadline %></td>
+        <td><%= task.deadline_on %></td>
         <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
         <td><%= t("enums.task.status_enum.#{task.status}") %></td>
         <td><%= link_to t("common.show"), task_path(task), class: "show-task" %></td>

@@ -20,8 +20,8 @@ class TasksController < ApplicationController
       @search_params = { search_title: search_title_param, status: status_param }
     else
       case params[:sort]
-      when 'deadline_asc'
-        @tasks = Task.all.order(deadline: :asc, created_at: :desc).page(params[:page]).per(10)
+      when 'deadline_on_asc'
+        @tasks = Task.all.order(deadline_on: :asc, created_at: :desc).page(params[:page]).per(10)
       when 'priority_desc'
         @tasks = Task.all.order(priority: :desc, created_at: :desc).page(params[:page]).per(10)
       else
@@ -66,7 +66,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :content, :deadline, :priority, :status)
+    params.require(:task).permit(:title, :content, :deadline_on, :priority, :status)
   end
 
   def search_title_param
@@ -76,5 +76,5 @@ class TasksController < ApplicationController
   def status_param
     params.dig(:search, :status)
   end
-  
+
 end

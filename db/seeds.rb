@@ -27,5 +27,5 @@ start_date = Date.new(2025, 2, 18)
   title = "#{n}#{suffix}_task"
   priority = Task.priorities.keys.sample
   status = Task.statuses.keys.sample
-  task = FactoryBot.create(:task, title: title, created_at: created_at, deadline: created_at + 7.days, priority: priority, status: status, content: 'Sample content')
+  task = FactoryBot.create(:task, title: title, created_at: created_at, deadline_on: created_at + 7.days, priority: priority, status: status, content: 'Sample content')
 end
