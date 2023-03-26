@@ -1,0 +1,10 @@
+.another-plain-old-css {
+  font-style: italic;
+}
+
+/* tests whether relative lookups of non-sass files works. */
+.default-old-css {
+  margin: 0px;
+}
+
+/* tests wheter relative lookups partials in the same directory. *//*# sourceMappingURL=second_level.css.map */

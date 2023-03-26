@@ -7,6 +7,19 @@ ja:
         title: "タイトル"
         content: "内容"
         created_at: "作成日時"
+        deadline_on: "終了期限"
+        priority: "優先度"
+        status: "ステータス"
+  enums:
+    task:
+      priority_enum:
+        low: "低"
+        medium: "中"
+        high: "高"
+      status_enum:
+        todo: "未着手"
+        doing: "着手中"
+        done: "完了"
     errors:
       messages:
     helpers:
@@ -26,6 +39,7 @@ ja:
     edit: "編集"
     destroy: "削除"
     back: "戻る"
+    search: "検索"
     create task: "登録する"
     update task: "更新する"
     confirm_destroy: "本当に削除してもよろしいですか？"

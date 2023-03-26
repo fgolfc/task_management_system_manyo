@@ -1,11 +1,22 @@
 <h1><%= t(".title") %></h1>
 
+<%= form_with(url: search_tasks_path, local: true, method: :get, scope: :search) do |f| %>
+  <%= f.label :status, t("activerecord.attributes.task.status") %><br>
+  <%= f.select :status, options_for_select(Task.statuses_i18n, params.dig(:search, :status)), { include_blank: true }, { name: "search[status]", class: "form-control", id: "task_status" } %><br>
+  <%= f.label :search_title, t("activerecord.attributes.task.title") %><br>
+  <%= f.text_field :search_title, name: 'search[search_title]', value: @search_params&.dig(:search_title), class: "search_input form-control", id: "search_title" %><br>
+  <%= f.submit t("common.search"), class: "btn btn-primary", id: "search_task" %>
+<% end %>
+
 <table>
   <thead>
     <tr>
       <th><%= t("activerecord.attributes.task.title") %></th>
       <th><%= t("activerecord.attributes.task.content") %></th>
       <th><%= t("activerecord.attributes.task.created_at") %></th>
+      <th><%= link_to t("activerecord.attributes.task.deadline_on"), tasks_path(sort: 'deadline_on_asc'), id: "order_deadline" %></th>
+      <th><%= link_to t("activerecord.attributes.task.priority"), tasks_path(sort: 'priority_desc'), id: "order_priority" %></th>
+      <th><%= t("activerecord.attributes.task.status") %></th>
     </tr>
   </thead>
   <tbody>
@@ -14,6 +25,9 @@
         <td><%= task.title %></td>
         <td><%= task.content %></td>
         <td><%= task.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+        <td><%= task.deadline_on %></td>
+        <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
+        <td><%= t("enums.task.status_enum.#{task.status}") %></td>
         <td><%= link_to t("common.show"), task_path(task), class: "show-task" %></td>
         <td><%= link_to t("common.edit"), edit_task_path(task), class: "edit-task" %></td>
         <td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "destroy-task", data: {confirm: t('common.confirm_destroy') } %></td>
@@ -22,4 +36,5 @@
   </tbody>
 </table>
 
+<% @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10) %>
 <%= paginate @tasks %>
