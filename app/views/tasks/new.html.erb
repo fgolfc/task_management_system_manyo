@@ -39,7 +39,7 @@
   </div>
 
   <div class="actions">
-    <%= form.submit t("common.create task"), id: "create-task" %>
+    <%= form.submit t('helpers.submit.create', model: Task.model_name.human), id: "create-task" %>
   </div>
 <% end %>
 <%= link_to t("common.back"), tasks_path, id: "back" %>
