@@ -1,33 +1,57 @@
 class TasksController < ApplicationController
-  
+  before_action :require_login
+  before_action :authenticate_user!
+  before_action :correct_user, only: [:show, :edit, :update, :destroy]
+
   def show
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def new
-    @task = Task.new
+    @task = current_user.tasks.build
+  end
+
+  def search
+    @tasks = current_user.tasks.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
+    @search_params = { search_title: search_title_param, status: status_param }
+    render 'index'
   end
   
   def index
-    @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10)
+    if params.dig(:search).present?
+      @tasks = current_user.tasks.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
+      @search_params = { search_title: search_title_param, status: status_param }
+    else
+      case params[:sort]
+      when 'deadline_on_asc'
+        @tasks = current_user.tasks.order(deadline_on: :asc, created_at: :desc).page(params[:page]).per(10)
+      when 'priority_desc'
+        @tasks = current_user.tasks.order(priority: :desc, created_at: :desc).page(params[:page]).per(10)
+      else
+        @tasks = current_user.tasks.order(created_at: :desc).page(params[:page]).per(10)
+      end
+      @search_params = nil
+      @status_params = params.dig(:search, :status)
+      @tasks = @tasks.filter_by_status(@status_params) if @status_params.present?
+    end
   end
 
   def create
-    @task = Task.create(task_params)
-
+    @task = current_user.tasks.build(task_params)
     if @task.save
-      redirect_to tasks_path, notice: t('.created')
+      redirect_to tasks_path
     else
+      flash.now[:alert] = t('.please_select_status')
       render :new
     end
   end
 
   def edit
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 
   def update
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
 
     if @task.update(task_params)
       redirect_to task_path(@task), notice: t('.updated')
@@ -37,14 +61,46 @@ class TasksController < ApplicationController
   end
 
   def destroy
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
     @task.destroy
+    redirect_to tasks_url, notice: t('.destroyed')
+  end
+
+  def destroy_user_tasks
+    current_user.tasks.destroy_all
     redirect_to tasks_url, notice: t('.destroyed')
   end
 
   private
 
   def task_params
-    params.require(:task).permit(:title, :content)
+    params.require(:task).permit(:title, :content, :deadline_on, :priority, :status)
+          .merge(user_id: current_user.id)
+  end
+
+  def search_title_param
+    params.dig(:search, :search_title)&.strip
+  end
+  
+  def status_param
+    params.dig(:search, :status)
+  end
+
+  def require_login
+    unless logged_in?
+      flash[:alert] = t('common.please_log_in')
+      redirect_to login_path
+    end
+  end
+
+  def logged_in?
+    current_user.present?
+  end
+
+  def correct_user
+    @task = Task.find(params[:id])
+    unless current_user?(@task.user)
+      redirect_to tasks_path, alert: t('common.access_denied')
+    end
   end
 end

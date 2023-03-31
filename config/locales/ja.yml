@@ -2,21 +2,75 @@ ja:
   activerecord:
     models:
       task: "タスク"
+      user: "アカウント"
+      session: "ログイン"
     attributes:
       task:
         title: "タイトル"
         content: "内容"
         created_at: "作成日時"
+        deadline_on: "終了期限"
+        priority: "優先度"
+        status: "ステータス"
+      user:
+        name: "名前"
+        email: "メールアドレス"
+        password: "パスワード"
+        password_confirmation: "パスワード（確認）"
+        is_admin?: "管理者権限"
+        tasks_count: "タスク数"
+      session:
+        email: "メールアドレス"
+        password: "パスワード"
+  enums:
+    task:
+      priority_enum:
+        low: "低"
+        medium: "中"
+        high: "高"
+      status_enum:
+        todo: "未着手"
+        doing: "着手中"
+        done: "完了"
+    session:
+      submit:
+        login: "ログイン"
     errors:
       messages:
+        taken: はすでに使用されています
+        blank: を入力してください
+        too_short: "は%{count}文字以上で入力してください"
+        confirmation: "が一致しません"
     helpers:
+      yes: "あり"
+      no: "なし"
       submit:
         show: "詳細"
         edit: "編集"
         destroy: "削除"
         back: "戻る"
-        create task: "登録する"
-        update task: "更新する"
+        create:
+          task: "%{model}を登録する"
+          user: "%{model}を作成する"
+          session: "%{model}する"
+        update:
+          task: "%{model}を更新する"
+          user: "%{model}を更新する"
+          session: "%{model}する"
+  flash:
+    danger: "ログインしてください"
+    notices:
+      created: "アカウントを登録しました"
+      updated: "アカウントを更新しました"
+      destroyed: "アカウントを削除しました"
+    alerts:
+      destroy_failed: "アカウントの削除に失敗しました"
+      please_log_in: "ログインしてください"
+      login_failed: "メールアドレスまたはパスワードに誤りがあります"
+      please_select_status: "ステータスを選択してください"
+    log_in_out:
+      logged_in: "ログインしました"
+      logged_out: "ログアウトしました"
   table:
     header:
       content: "内容"
@@ -26,49 +80,90 @@ ja:
     edit: "編集"
     destroy: "削除"
     back: "戻る"
-    create task: "登録する"
-    update task: "更新する"
+    search: "検索"
+    create: "%{model}を登録する"
+    update: "%{model}を更新する"
     confirm_destroy: "本当に削除してもよろしいですか？"
+    please_log_in: "ログインしてください"
   tasks:
     index:
       title: "タスク一覧ページ"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
-      create task: "登録する"
+      create: "登録する"
       back: "戻る"
       edit: "編集"
-      update task: "更新する"
+      update: "更新する"
     new:
       title: "タスク登録ページ"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
-      create task: "登録する"
+      create: "登録する"
       back: "戻る"
       edit: "編集"
-      update task: "更新する"
+      update: "更新する"
     edit:
       title: "タスク編集ページ"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
-      create task: "登録する"
+      create: "登録する"
       back: "戻る"
       edit: "編集"
-      update task: "更新する"
+      update: "更新する"
     show:
       title: "タスク詳細ページ"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
-      create task: "登録する"
+      create: "登録する"
       back: "戻る"
       edit: "編集"
-      update task: "更新する"
+      update: "更新する"
     create:
       created: "タスクを登録しました"
     update:
       updated: "タスクを更新しました"
     destroy:
       destroyed: "タスクを削除しました"
+  users:
+    index:
+      name: "名前"
+      email: "メールアドレス"
+    new:
+      title: "アカウント登録ページ"
+      name: "名前"
+      email: "メールアドレス"
+      password: "パスワード"
+      password_confirmation: "パスワード（確認）"
+      create-user: "登録する"
+    edit:
+      title: "アカウント編集ページ"
+      name: "名前"
+      email: "メールアドレス"
+      password: "パスワード"
+      password_confirmation: "パスワード（確認）"
+      back: "戻る"
+      edit: "編集"
+      update: "更新する"
+    show:
+      title: "アカウント詳細ページ"
+    create:
+      created: "ユーザーを登録しました"
+    update:
+      updated: "ユーザーを更新しました"
+    destroy:
+      destroyed: "ユーザーを削除しました"
+  sessions:
+    new:
+        title: "ログインページ"
+    create:
+      invalid_combination: "メールアドレスまたはパスワードが無効です"
+  layouts:
+    application:
+      sign_up: "アカウント登録"
+      sign_in: "ログイン"
+      account_setting: "アカウント設定"
+      sign_out: "ログアウト"

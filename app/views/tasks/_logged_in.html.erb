@@ -1,0 +1,34 @@
+<h2>タスク一覧</h2>
+<%= link_to "タスク追加", new_task_path %>
+<%= link_to "ログアウト", logout_path, method: :delete %>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("activerecord.attributes.task.title") %></th>
+      <th><%= t("activerecord.attributes.task.content") %></th>
+      <th><%= t("activerecord.attributes.task.created_at") %></th>
+      <th><%= link_to t("activerecord.attributes.task.deadline_on"), tasks_path(sort: 'deadline_on_asc'), id: "order_deadline" %></th>
+      <th><%= link_to t("activerecord.attributes.task.priority"), tasks_path(sort: 'priority_desc'), id: "order_priority" %></th>
+      <th><%= t("activerecord.attributes.task.status") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+      <tr>
+        <td><%= task.title %></td>
+        <td><%= task.content %></td>
+        <td><%= task.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+        <td><%= task.deadline_on %></td>
+        <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
+        <td><%= t("enums.task.status_enum.#{task.status}") %></td>
+        <td><%= link_to t("common.show"), task_path(task), class: "show-task" %></td>
+        <td><%= link_to t("common.edit"), edit_task_path(task), class: "edit-task" %></td>
+        <td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "destroy-task", data: {confirm: t('common.confirm_destroy') } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10) %>
+<%= paginate @tasks %>

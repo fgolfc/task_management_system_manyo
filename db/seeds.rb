@@ -8,10 +8,22 @@
 require 'date'
 require 'factory_bot_rails'
 
-date = Date.new(2025, 2, 18)
+start_date = Date.new(2025, 2, 18)
 
-(1..50).each do |n|
-  created_at = date -= 1
+FactoryBot.define do
+  factory :my_task do
+    title { "Sample Title" }
+    content { "Sample Content" }
+    deadline_on { Date.today + 7.days }
+    status { :todo }
+    priority { :low }
+    user_id { 1 }
+  end
+end
+
+(1..10).each do |n|
+  random_offset = rand(30) # generate a random number between 0 and 29
+  created_at = start_date - random_offset
   suffix = case n % 10
     when 1 then "st"
     when 2 then "nd"
@@ -19,5 +31,14 @@ date = Date.new(2025, 2, 18)
     else "th"
   end
   title = "#{n}#{suffix}_task"
-  task = FactoryBot.create(:task, title: title, created_at: created_at)
+  priority = Task.priorities.keys.sample
+  status = Task.statuses.keys.sample
+  task = FactoryBot.create(:my_task, title: title, created_at: created_at, deadline_on: created_at + 7.days, priority: priority, status: status)
 end
+
+# 管理者を作成する
+User.create!(name: 'admin', email: 'admin@example.com', password: 'password', password_confirmation: 'password', admin: true)
+
+# その他のユーザーを作成する
+User.create!(name: 'Alice', email: 'alice@example.com', password: 'password', password_confirmation: 'password')
+User.create!(name: 'Bob', email: 'bob@example.com', password: 'password', password_confirmation: 'password')

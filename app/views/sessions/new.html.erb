@@ -1,0 +1,9 @@
+<h1><%= t('.title') %></h1>
+<%= form_with(scope: :session, url: sessions_path, local: true) do |f| %>
+
+<%= f.label :email, t('activerecord.attributes.session.email') %><br>
+<%= f.email_field :email %><br>
+<%= f.label :password, t('activerecord.attributes.session.password') %><br>
+<%= f.password_field :password %><br>
+<%= f.submit t('enums.session.submit.login'), id: "create-session" %>
+<% end %>

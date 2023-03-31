@@ -58,6 +58,7 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
+    bcrypt (3.1.18)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -83,6 +84,8 @@ GEM
     crass (1.0.6)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
+    enum_help (0.0.19)
+      activesupport (>= 3.0.0)
     erubi (1.10.0)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
@@ -250,11 +253,13 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  bcrypt (~> 3.1.7)
   better_errors
   binding_of_caller
   bootsnap (>= 1.4.2)
   byebug
   capybara (>= 2.15)
+  enum_help
   factory_bot_rails
   jbuilder (~> 2.7)
   kaminari
