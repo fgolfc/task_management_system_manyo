@@ -1,0 +1,15 @@
+<h1><%= t('.title') %></h1>
+<p>
+  <strong><%= User.human_attribute_name(:name) %></strong>
+  <%= @user.name %>
+</p>
+<p>
+  <strong><%= User.human_attribute_name(:email) %></strong>
+  <%= @user.email %>
+</p>
+<p>
+  <strong><%= User.human_attribute_name(:is_admin?) %></strong>
+  <%= user.admin? ? t('helpers.yes') : t('helpers.no') %>
+</p>
+
+<%= link_to t('common.back'), admin_user_path, id: 'back' %>

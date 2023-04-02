@@ -97,6 +97,7 @@ ja:
       update: "更新する"
     new:
       title: "タスク登録ページ"
+      register: "タスクを登録する"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
@@ -105,7 +106,7 @@ ja:
       edit: "編集"
       update: "更新する"
     edit:
-      title: "タスク編集ページ"
+      title: "ユーザ編集ページ"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
@@ -130,10 +131,12 @@ ja:
       destroyed: "タスクを削除しました"
   users:
     index:
+      title: "ユーザ一覧ページ"
       name: "名前"
       email: "メールアドレス"
     new:
       title: "アカウント登録ページ"
+      register: "ユーザを登録する"
       name: "名前"
       email: "メールアドレス"
       password: "パスワード"
@@ -156,6 +159,14 @@ ja:
       updated: "ユーザーを更新しました"
     destroy:
       destroyed: "ユーザーを削除しました"
+  admin:
+    users:
+      new:
+        title: "ユーザ登録ページ"
+      edit:
+        title: "ユーザ編集ページ"
+      show:
+        title: "ユーザ詳細ページ"
   sessions:
     new:
         title: "ログインページ"
@@ -163,7 +174,10 @@ ja:
       invalid_combination: "メールアドレスまたはパスワードが無効です"
   layouts:
     application:
+      users_index: "ユーザ一覧"
+      tasks_index: "タスク一覧"
       sign_up: "アカウント登録"
       sign_in: "ログイン"
       account_setting: "アカウント設定"
       sign_out: "ログアウト"
+      create_session: "アカウント登録"

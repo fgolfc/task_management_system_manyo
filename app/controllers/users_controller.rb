@@ -1,7 +1,8 @@
-class Admin::UsersController < ApplicationController
+class UsersController < ApplicationController
+  before_action :correct_user, only: [:show, :edit, :update, :destroy]
   before_action :require_admin, only: [:index, :destroy]
-  before_action :authenticate_user!, except: [:new, :create]
-
+  # before_action :authenticate_user!, except: [:new, :create]
+  
   def new
     @user = User.new
   end
@@ -51,11 +52,28 @@ class Admin::UsersController < ApplicationController
     end
   end
 
-  def toggle_admin
-    @user = User.find(params[:id])
-    @user.toggle(:admin)
-    @user.save
-    redirect_to admin_users_path
+  def find_user(email, password)
+    user = User.find_by(email: email)
+    if user && user.authenticate(password)
+      return user
+    else
+      return nil
+    end
+  end
+  
+  def authenticate_user!
+    unless current_user
+      flash[:alert] = t('common.please_log_in')
+      redirect_to new_session_path
+    end
+  end
+  
+  def require_admin
+    if current_user && current_user.admin?
+      # 管理者権限がある場合の処理
+    else
+      redirect_to root_url
+    end
   end
   
   private
@@ -63,8 +81,9 @@ class Admin::UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
-  
-  def require_admin
-    redirect_to root_url unless current_user.admin?
+
+  def correct_user
+    @user = User.find(params[:id])
+    redirect_to(root_url) unless current_user == @user
   end
 end

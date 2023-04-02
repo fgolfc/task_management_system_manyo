@@ -1,13 +1,13 @@
-class UsersController < ApplicationController
-  before_action :correct_user, only: [:show, :edit, :update, :destroy]
+class Admin::UsersController < ApplicationController
   before_action :require_admin, only: [:index, :destroy]
   before_action :authenticate_user!, except: [:new, :create]
-  
+
   def new
     @user = User.new
   end
 
   def index
+    @users = User.all
   end
   
   def create
@@ -51,34 +51,16 @@ class UsersController < ApplicationController
     end
   end
 
-  def find_user(email, password)
-    user = User.find_by(email: email)
-    if user && user.authenticate(password)
-      return user
-    else
-      return nil
-    end
-  end
-  
-  def authenticate_user!
-    unless current_user
-      flash[:alert] = t('common.please_log_in')
-      redirect_back(fallback_location: new_session_path)
-    end
-  end
-  
-  def require_admin
-    redirect_to root_url unless current_user.admin?
+  def toggle_admin
+    @user = User.find(params[:id])
+    @user.toggle(:admin)
+    @user.save
+    redirect_to admin_user_path
   end
   
   private
   
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def correct_user
-    @user = User.find(params[:id])
-    redirect_to(root_url) unless current_user == @user
   end
 end
