@@ -34,6 +34,7 @@ ActiveRecord::Schema.define(version: 2023_04_09_070243) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "tasks_count", default: 0, null: false
+    t.boolean "admin", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

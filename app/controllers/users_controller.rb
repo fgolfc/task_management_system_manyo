@@ -85,7 +85,7 @@ class UsersController < ApplicationController
   end
 
   def require_admin
-    unless current_user.admin? 
+    if current_user && !current_user.admin?
       flash[:alert] = '管理者以外アクセスできません'
       redirect_to tasks_path 
     end
