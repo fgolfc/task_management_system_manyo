@@ -9,4 +9,4 @@ require 'date'
 require 'factory_bot_rails'
 
 admin = FactoryBot.create(:admin_user_with_tasks)
-general = FactoryBot.create(:general_user_with_tasks)
+user = FactoryBot.create(:user_with_tasks)
