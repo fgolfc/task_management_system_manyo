@@ -2,7 +2,7 @@ ja:
   activerecord:
     models:
       task: "タスク"
-      user: "アカウント"
+      user: "ユーザー"
       session: "ログイン"
     attributes:
       task:
@@ -17,11 +17,14 @@ ja:
         email: "メールアドレス"
         password: "パスワード"
         password_confirmation: "パスワード（確認）"
-        is_admin?: "管理者権限"
+        admin: "管理者権限"
         tasks_count: "タスク数"
       session:
         email: "メールアドレス"
         password: "パスワード"
+  label:
+    "yes": "あり"
+    "no": "なし"
   enums:
     task:
       priority_enum:
@@ -42,8 +45,8 @@ ja:
         too_short: "は%{count}文字以上で入力してください"
         confirmation: "が一致しません"
     helpers:
-      yes: "あり"
-      no: "なし"
+      "yes": "あり"
+      "no": "なし"
       submit:
         show: "詳細"
         edit: "編集"
@@ -71,6 +74,8 @@ ja:
     log_in_out:
       logged_in: "ログインしました"
       logged_out: "ログアウトしました"
+    error:
+      access_denied: "アクセスが拒否されました。管理者権限が必要です。"
   table:
     header:
       content: "内容"
@@ -84,6 +89,7 @@ ja:
     create: "%{model}を登録する"
     update: "%{model}を更新する"
     confirm_destroy: "本当に削除してもよろしいですか？"
+    access_denied: "アクセスが拒否されました。"
     please_log_in: "ログインしてください"
   tasks:
     index:
@@ -143,7 +149,7 @@ ja:
       password_confirmation: "パスワード（確認）"
       create-user: "登録する"
     edit:
-      title: "アカウント編集ページ"
+      title: "ユーザ編集ページ"
       name: "名前"
       email: "メールアドレス"
       password: "パスワード"
@@ -154,11 +160,11 @@ ja:
     show:
       title: "アカウント詳細ページ"
     create:
-      created: "ユーザーを登録しました"
+      created: "ユーザを登録しました"
     update:
-      updated: "ユーザーを更新しました"
+      updated: "ユーザを更新しました"
     destroy:
-      destroyed: "ユーザーを削除しました"
+      destroyed: "ユーザを削除しました"
   admin:
     users:
       new:
@@ -167,6 +173,12 @@ ja:
         title: "ユーザ編集ページ"
       show:
         title: "ユーザ詳細ページ"
+      create:
+        created: "ユーザを登録しました"
+      destroy:
+        destroyed: "ユーザを削除しました"
+      update:
+        updated: "ユーザを更新しました"
   sessions:
     new:
         title: "ログインページ"

@@ -8,37 +8,52 @@
 require 'date'
 require 'factory_bot_rails'
 
-start_date = Date.new(2025, 2, 18)
-
 FactoryBot.define do
-  factory :my_task do
-    title { "Sample Title" }
+  factory :task do
+    sequence(:title) { |n| "#{n}_task" }
     content { "Sample Content" }
-    deadline_on { Date.today + 7.days }
-    status { :todo }
-    priority { :low }
-    user_id { 1 }
+    deadline_on { Date.today + rand(1..30).days }
+    priority { Task.priorities.keys.sample }
+    status { Task.statuses.keys.sample }
+    association :user
+
+    factory :admin_task do
+      association :user, factory: :admin_user
+    end
+
+    factory :general_task do
+      association :user, factory: :general_user
+    end
+  end
+
+  factory :admin_user, class: User do
+    sequence(:name) { |n| "admin#{n}" }
+    sequence(:email) { |n| "admin#{n}@example.com"}
+    password { 'password' }
+    password_confirmation { 'password' }
+    admin { true }
+
+    factory :admin_user_with_tasks do
+      after(:create) do |user|
+        create_list(:admin_task, 50, user: user)
+      end
+    end
+  end
+
+  factory :general_user, class: User do
+    sequence(:name) { |n| "user#{n}" }
+    sequence(:email) { |n| "user#{n}@example.com"}
+    password { 'password' }
+    password_confirmation { 'password' }
+    admin { false }
+
+    factory :general_user_with_tasks do
+      after(:create) do |user|
+        create_list(:general_task, 50, user: user)
+      end
+    end
   end
 end
 
-(1..10).each do |n|
-  random_offset = rand(30) # generate a random number between 0 and 29
-  created_at = start_date - random_offset
-  suffix = case n % 10
-    when 1 then "st"
-    when 2 then "nd"
-    when 3 then "rd"
-    else "th"
-  end
-  title = "#{n}#{suffix}_task"
-  priority = Task.priorities.keys.sample
-  status = Task.statuses.keys.sample
-  task = FactoryBot.create(:my_task, title: title, created_at: created_at, deadline_on: created_at + 7.days, priority: priority, status: status)
-end
-
-# 管理者を作成する
-User.create!(name: 'admin', email: 'admin@example.com', password: 'password', password_confirmation: 'password', admin: true)
-
-# その他のユーザーを作成する
-User.create!(name: 'Alice', email: 'alice@example.com', password: 'password', password_confirmation: 'password')
-User.create!(name: 'Bob', email: 'bob@example.com', password: 'password', password_confirmation: 'password')
+admin = FactoryBot.create(:admin_user_with_tasks)
+general = FactoryBot.create(:general_user_with_tasks)

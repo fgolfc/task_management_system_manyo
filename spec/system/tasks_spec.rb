@@ -1,13 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe 'タスク管理機能', type: :system do
-  let!(:task1) { FactoryBot.create(:task, title: 'first_task', deadline_on: Date.new(2025, 02, 18), priority: :medium, status: :todo) }
-  let!(:task2) { FactoryBot.create(:task, title: 'second_task', deadline_on: Date.new(2025, 02, 17), priority: :high, status: :doing) }
-  let!(:task3) { FactoryBot.create(:task, title: 'third_task', deadline_on: Date.new(2025, 02, 16), priority: :low, status: :done) }
+  let!(:task1) { FactoryBot.create(:task, title: 'first_task', deadline_on: Date.new(2025, 02, 18), priority: :medium, status: :todo, user: user) }
+  let!(:task2) { FactoryBot.create(:task, title: 'second_task', deadline_on: Date.new(2025, 02, 17), priority: :high, status: :doing, user: user) }
+  let!(:task3) { FactoryBot.create(:task, title: 'third_task', deadline_on: Date.new(2025, 02, 16), priority: :low, status: :done, user: user) }
 
   describe '登録機能' do
     context 'タスクを登録した場合' do
+      let!(:user) { FactoryBot.create(:user) }
       before do
+        visit new_session_path
+        fill_in 'メールアドレス', with: user.email
+        fill_in 'パスワード', with: user.password
+        click_button 'ログイン'
         visit new_task_path
         fill_in 'タイトル', with: 'first_task'
         fill_in '内容', with: '企画書を作成する。'
@@ -24,8 +29,16 @@ RSpec.describe 'タスク管理機能', type: :system do
   end
 
   describe '一覧表示機能' do
-    # 「一覧画面に遷移した場合」や「タスクが作成日時の降順に並んでいる場合」など、contextが実行されるタイミングで、before内のコードが実行される
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:task1) { FactoryBot.create(:task, user: user, title: 'task1', created_at: 3.days.ago) }
+    let!(:task2) { FactoryBot.create(:task, user: user, title: 'task2', created_at: 2.days.ago) }
+    let!(:task3) { FactoryBot.create(:task, user: user, title: 'task3', created_at: 1.day.ago) }
+  
     before do
+      visit new_session_path
+      fill_in 'メールアドレス', with: user.email
+      fill_in 'パスワード', with: user.password
+      click_button 'ログイン'
       visit tasks_path
     end
   
@@ -38,18 +51,26 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(task_list[2]).to have_content task1.title
       end
     end
-
+  
     context '新たにタスクを作成した場合' do
-      let!(:new_task) { FactoryBot.create(:task, title: 'new_task_title', deadline_on: Date.new(2025, 02, 16), priority: :medium, status: :todo) }
-      
+      let!(:new_task) { FactoryBot.create(:task, title: 'new_task_title', deadline_on: Date.new(2025, 02, 16), priority: :medium, status: :todo, user: user) }
+  
       it '新しいタスクが一番上に表示される' do
-        expect(Task.all.order(created_at: :desc).first).to eq new_task
+        visit tasks_path
+        expect(page).to have_content new_task.title
+        task_list = all('tbody tr')
+        expect(task_list[0]).to have_content new_task.title
       end
     end
   end
 
   describe 'ソート機能' do
+    let!(:user) { FactoryBot.create(:user) }
     before do
+      visit new_session_path
+      fill_in 'メールアドレス', with: user.email
+      fill_in 'パスワード', with: user.password
+      click_button 'ログイン'
       visit tasks_path
     end
 
@@ -77,7 +98,18 @@ RSpec.describe 'タスク管理機能', type: :system do
   end
       
   describe '検索機能' do
-    let!(:task4) { FactoryBot.create(:task, title: 'forth_task', deadline_on: Date.new(2025, 02, 15), priority: :low, status: :done) }
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:task1) { FactoryBot.create(:task, user: user, title: 'first_task', created_at: 3.days.ago) }
+    let!(:task2) { FactoryBot.create(:task, user: user, title: 'second_task', created_at: 2.days.ago) }
+    let!(:task3) { FactoryBot.create(:task, user: user, title: 'third_task', created_at: 1.day.ago) }
+    let!(:task4) { FactoryBot.create(:task, user: user, title: 'forth_task', deadline_on: Date.new(2025, 02, 15), priority: :low, status: :done) }
+  
+    before do
+      visit new_session_path
+      fill_in 'メールアドレス', with: user.email
+      fill_in 'パスワード', with: user.password
+      click_button 'ログイン'
+    end
   
     describe 'タイトルであいまい検索をした場合' do
       before do
@@ -102,10 +134,10 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
   
       it "検索したステータスに一致するタスクのみ表示される" do
-        expect(page).to have_content(task3.title, wait: 10)
         expect(page).to have_content(task4.title, wait: 10)
         expect(page).not_to have_content(task1.title, wait: 10)
         expect(page).not_to have_content(task2.title, wait: 10)
+        expect(page).not_to have_content(task3.title, wait: 10)
       end
     end
   
@@ -118,9 +150,9 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
   
       it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
-        expect(page).to have_content(task3.title, wait: 10)
         expect(page).not_to have_content(task1.title, wait: 10)
         expect(page).not_to have_content(task2.title, wait: 10)
+        expect(page).to have_content(task3.title, wait: 10)
         expect(page).not_to have_content(task4.title, wait: 10)
       end
     end
@@ -128,8 +160,13 @@ RSpec.describe 'タスク管理機能', type: :system do
   
   describe '詳細表示機能' do
     context '任意のタスク詳細画面に遷移した場合' do
+      let!(:user) { FactoryBot.create(:user) }
       before do
-        FactoryBot.create(:task, deadline_on: Date.new(2025, 02, 16), priority: :medium, status: :todo)
+        visit new_session_path
+        fill_in 'メールアドレス', with: user.email
+        fill_in 'パスワード', with: user.password
+        click_button 'ログイン'
+        FactoryBot.create(:task, deadline_on: Date.new(2025, 02, 16), priority: :medium, status: :todo, user: user)
         visit tasks_path
         click_on 'search_task'
       end

@@ -33,9 +33,14 @@
     <%= form.password_field :password_confirmation %>
   </div>
 
+  <div class="field">
+    <%= form.label :admin, User.human_attribute_name(:admin) %><br>
+    <%= form.check_box :admin %>
+  </div>
+
   <div class="actions">
     <%= form.submit t('helpers.submit.update', model: User.model_name.human), id: "update-user" %>
   </div>
 <% end %>
 
-<%= link_to t('common.back'), user_path(current_user.id), id: 'back' %>
+<%= link_to t('common.back'), users_path, id: 'back' %>

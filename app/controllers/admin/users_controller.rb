@@ -1,13 +1,13 @@
 class Admin::UsersController < ApplicationController
   before_action :require_admin, only: [:index, :destroy]
   before_action :authenticate_user!, except: [:new, :create]
+  before_action :correct_user, only: [:edit, :update]
 
   def new
     @user = User.new
   end
 
   def index
-    @users = User.all
   end
   
   def create
@@ -22,6 +22,7 @@ class Admin::UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
+    @tasks = @user.tasks.page(params[:page]).per(10)
   end
   
   def edit
@@ -31,7 +32,7 @@ class Admin::UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      redirect_to user_path(@user), notice: t('.updated')
+      redirect_to admin_user_path(@user), notice: t('.updated')
     else
       render :edit
     end
@@ -39,18 +40,44 @@ class Admin::UsersController < ApplicationController
   
   def destroy
     @user = User.find(params[:id])
-    if @user.destroy
-      if current_user.admin?
-        redirect_to users_path, notice: t('.destroyed')
+    if current_user.admin?
+      if current_user == @user
+        redirect_to users_path, flash: { error: t('common.access_denied') }
       else
-        log_out
-        redirect_to new_session_path, notice: t('.destroyed')
+        if @user.tasks.delete_all && @user.destroy
+          redirect_to users_path, notice: t('.destroyed')
+        else
+          redirect_to users_path, alert: t('.destroy_failed')
+        end
       end
+    elsif current_user == @user
+      redirect_to users_path, flash: { error: t('common.access_denied') }
     else
-      redirect_to users_path, alert: t('.destroy_failed')
+      redirect_to users_path, alert: t('common.access_denied')
     end
   end
 
+  def find_user(email, password)
+    user = User.find_by(email: email)
+    if user && user.authenticate(password)
+      return user
+    else
+      return nil
+    end
+  end
+  
+  def authenticate_user!
+    unless current_user
+      flash[:alert] = t('common.please_log_in')
+      redirect_to new_session_path
+    else
+      unless current_user.admin?
+        flash[:alert] = t('common.access_denied')
+        redirect_to root_path
+      end
+    end
+  end
+  
   def toggle_admin
     @user = User.find(params[:id])
     @user.toggle(:admin)
@@ -61,6 +88,11 @@ class Admin::UsersController < ApplicationController
   private
   
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :admin)
+  end
+
+  def correct_user
+    @user = User.find(params[:id])
+    redirect_to(root_url) unless current_user == @user
   end
 end

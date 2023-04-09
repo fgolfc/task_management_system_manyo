@@ -1,6 +1,6 @@
 <h1><%= t('.title') %></h1>
 
-<%= form_with(model: [@admin, @user], url: admin_user_path) do |form| %>
+<%= form_with(model: [@admin, @user], url: admin_users_path) do |form| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
       <h2><%= @user.errors.count %> 件のエラーメッセージ </h2>
@@ -34,7 +34,7 @@
   </div>
 
   <div class="field">
-    <%= form.label :admin, User.human_attribute_name(:is_admin?) %><br>
+    <%= form.label :admin, User.human_attribute_name(:admin) %><br>
     <%= form.check_box :admin %>
   </div>
 

@@ -34,7 +34,7 @@
   </div>
 
   <div class="field">
-    <%= form.label :admin, User.human_attribute_name(:is_admin?) %><br>
+    <%= form.label :admin, User.human_attribute_name(:admin) %><br>
     <%= form.check_box :admin %>
   </div>
 
@@ -43,4 +43,4 @@
   </div>
 <% end %>
 
-<%= link_to t('common.back'), admin_user_path, id: 'back' %>
+<%= link_to t('common.back'), users_path, id: 'back' %>

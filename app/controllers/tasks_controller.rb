@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+  before_action :authenticate_user!, only: [:index]
   before_action :require_login
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
 
@@ -15,11 +16,12 @@ class TasksController < ApplicationController
     @search_params = { search_title: search_title_param, status: status_param }
     render 'index'
   end
-  
+
   def index
+    @search_params = { search_title: search_title_param, status: status_param }
+    @user = current_user # 現在のユーザーを取得するためにこの行を追加する
     if params.dig(:search).present?
       @tasks = current_user.tasks.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
-      @search_params = { search_title: search_title_param, status: status_param }
     else
       case params[:sort]
       when 'deadline_on_asc'
@@ -29,9 +31,6 @@ class TasksController < ApplicationController
       else
         @tasks = current_user.tasks.order(created_at: :desc).page(params[:page]).per(10)
       end
-      @search_params = nil
-      @status_params = params.dig(:search, :status)
-      @tasks = @tasks.filter_by_status(@status_params) if @status_params.present?
     end
   end
 
@@ -80,7 +79,7 @@ class TasksController < ApplicationController
   def search_title_param
     params.dig(:search, :search_title)&.strip
   end
-  
+
   def status_param
     params.dig(:search, :status)
   end
@@ -89,6 +88,12 @@ class TasksController < ApplicationController
     unless logged_in?
       flash[:alert] = t('common.please_log_in')
       redirect_to login_path
+    end
+  end
+
+  def authenticate_user!
+    unless logged_in?
+      redirect_to new_session_path, notice: 'ログインしてください'
     end
   end
 
