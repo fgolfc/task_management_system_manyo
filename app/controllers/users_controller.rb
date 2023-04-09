@@ -11,6 +11,10 @@ class UsersController < ApplicationController
     @admin_users = @users.where(admin: true)
   end
   
+  def admin_index
+    @admin_users = User.where(admin: true)
+  end
+  
   def create
     @user = User.new(user_params)
     if @user.save
