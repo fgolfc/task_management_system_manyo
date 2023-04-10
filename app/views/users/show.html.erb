@@ -8,4 +8,4 @@
   <%= @user.email %>
 </p>
 
-<%= link_to t('common.back'), users_path, id: 'back' %> 
+<%= link_to t('common.edit'), edit_user_path(@user), id: 'edit-user' %> 

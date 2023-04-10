@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     get 'search', on: :collection
   end
 
-  resources :users, only: [:index, :new, :create, :edit, :update], except: [:destroy]
+  resources :users, only: [:index, :new, :create, :edit, :update, :show], except: [:destroy]
 
   get 'users/admin_index', :to => redirect('/admin/users')
 
