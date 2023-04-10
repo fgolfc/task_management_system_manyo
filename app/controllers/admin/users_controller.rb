@@ -28,11 +28,18 @@ class Admin::UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
   end
-  
+
   def update
     @user = User.find(params[:id])
+    if params[:user][:password].blank?
+      params[:user].delete(:password)
+      params[:user].delete(:password_confirmation)
+    end
     if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: t('.updated')
+      if current_user.admin?
+        @user.update_attribute(:admin, params[:user][:admin])
+      end
+      redirect_to users_path, notice: t('.updated')
     else
       render :edit
     end

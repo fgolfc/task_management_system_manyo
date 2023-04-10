@@ -103,7 +103,7 @@ class TasksController < ApplicationController
 
   def correct_user
     @task = Task.find(params[:id])
-    unless current_user?(@task.user)
+    unless current_user == @task.user
       redirect_to tasks_path, alert: t('common.access_denied')
     end
   end

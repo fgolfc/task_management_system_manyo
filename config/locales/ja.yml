@@ -88,6 +88,7 @@ ja:
     search: "検索"
     create: "%{model}を登録する"
     update: "%{model}を更新する"
+    update_task: "更新する"
     confirm_destroy: "本当に削除してもよろしいですか？"
     access_denied: "アクセスが拒否されました。"
     please_log_in: "ログインしてください"
@@ -112,7 +113,7 @@ ja:
       edit: "編集"
       update: "更新する"
     edit:
-      title: "ユーザ編集ページ"
+      title: "タスク編集ページ"
       content: "内容"
       created_at: "作成日時"
       destroy: "削除する"
@@ -149,7 +150,7 @@ ja:
       password_confirmation: "パスワード（確認）"
       create-user: "登録する"
     edit:
-      title: "ユーザ編集ページ"
+      title: "アカウント編集ページ"
       name: "名前"
       email: "メールアドレス"
       password: "パスワード"
@@ -190,6 +191,6 @@ ja:
       tasks_index: "タスク一覧"
       sign_up: "アカウント登録"
       sign_in: "ログイン"
-      account_setting: "アカウント設定"
+      update-user: "アカウント設定"
       sign_out: "ログアウト"
       create_session: "アカウント登録"

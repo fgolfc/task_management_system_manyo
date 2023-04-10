@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
-  before_action :require_admin, only: [:index, :edit, :update, :destroy]
+  before_action :require_admin, only: [:index, :destroy]
 
   def new
     @user = User.new
@@ -25,23 +25,14 @@ class UsersController < ApplicationController
     end
   end
   
-  def edit
-    @user = User.find(params[:id])
-  end
-
   def update
     @user = User.find(params[:id])
-    if params[:user][:password].blank?
-      params[:user].delete(:password)
-      params[:user].delete(:password_confirmation)
-    end
-    if @user.update(user_params)
-      if current_user.admin?
-        @user.update_attribute(:admin, params[:user][:admin])
-      end
-      redirect_to users_path, notice: t('.updated')
-    else
+    if current_user == @user
+      if @user.update(user_params)
+        redirect_to admin_user_path(@user), notice: t('.updated')
+      else
       render :edit
+      end
     end
   end
 

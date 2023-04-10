@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :users do
       member do
         patch 'toggle_admin'
+        get 'user/:id', to: 'users#show', as: :user_detail
       end
     end
   end
@@ -15,7 +16,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index, :new, :create, :edit, :update], except: [:destroy]
 
-  get 'users/admin_index', to: 'users#admin_index'
+  get 'users/admin_index', :to => redirect('/admin/users')
 
   get 'login', to: 'sessions#new', as: :new_session
   post 'login', to: 'sessions#create', as: :create_session
