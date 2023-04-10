@@ -25,7 +25,7 @@
         <li><%= link_to t("tasks.new.register"), new_task_path %></li>
         <li><%= link_to t("layouts.application.update-user"), user_path(current_user) %></li>
         <li><%= link_to t("layouts.application.sign_out"), logout_path, method: :delete, id: "sign-out" %></li>
-      <% else %>s
+      <% else %>
         <li><%= link_to t("layouts.application.create_session"), new_user_path %></li>
         <li><%= link_to t("layouts.application.sign_in"), new_session_path, id: "sign-in" %></li>
       <% end %>

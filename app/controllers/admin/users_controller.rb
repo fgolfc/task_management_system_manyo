@@ -78,7 +78,8 @@ class Admin::UsersController < ApplicationController
       flash[:alert] = t('common.please_log_in')
       redirect_to new_session_path
     else
-      unless current_user.admin?
+      @user = User.find(params[:id])
+      unless current_user.admin? || current_user == @user
         flash[:alert] = t('common.access_denied')
         redirect_to root_path
       end
@@ -100,6 +101,6 @@ class Admin::UsersController < ApplicationController
 
   def correct_user
     @user = User.find(params[:id])
-    redirect_to(root_url) unless current_user == @user
+    redirect_to(root_url) unless current_user.admin? || current_user == @user 
   end
 end
