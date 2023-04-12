@@ -1,6 +1,6 @@
 <h1><%= t('.title') %></h1>
 
-<%= form_with(model: [@admin, @user], url: admin_users_path) do |form| %>
+<%= form_with(model: @user, url: admin_users_path(@user)) do |form| %>
   <% if @user.errors.any? %>
     <div id="error_explanation">
       <h2><%= @user.errors.count %> 件のエラーメッセージ </h2>

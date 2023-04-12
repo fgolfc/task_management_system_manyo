@@ -10,6 +10,7 @@ RSpec.describe 'ユーザ管理機能', type: :system do
         fill_in 'パスワード', with: 'password'
         fill_in 'パスワード（確認）', with: 'password'
         click_button '登録する'
+        sleep(1)
         expect(current_path).to eq tasks_path
       end
     end
@@ -52,8 +53,8 @@ RSpec.describe 'ユーザ管理機能', type: :system do
   
     context '管理者がログインした場合' do
       it 'ユーザ一覧画面にアクセスできる' do
-        visit users_path
-        expect(current_path).to eq users_path
+        visit admin_users_path
+        expect(current_path).to eq admin_users_path
       end
   
       it '管理者を登録できる' do
@@ -65,7 +66,7 @@ RSpec.describe 'ユーザ管理機能', type: :system do
         check '管理者権限'
         click_button '登録する'
         expect(page).to have_content 'ユーザを登録しました'
-        visit users_path
+        visit admin_users_path
         expect(page).to have_content 'テスト管理者'
       end
   
@@ -76,34 +77,36 @@ RSpec.describe 'ユーザ管理機能', type: :system do
   
       it 'パスワードなしでも編集できる' do
         other_user = FactoryBot.create(:user)
-        visit edit_user_path(other_user)
+        visit edit_admin_user_path(other_user)
+        expect(current_path).to eq edit_admin_user_path(other_user)
         fill_in '名前', with: '編集後の名前'
         click_button '更新する'
-        expect(current_path).to eq users_path
+        sleep(1)
+        expect(current_path).to eq admin_users_path
         expect(page).to have_content 'ユーザを更新しました'
       end
   
       it 'ユーザを削除できる' do
         other_user = FactoryBot.create(:user)
-        visit users_path
+        visit admin_users_path
         click_link '削除', href: admin_user_path(other_user)
         page.accept_confirm
-        expect(current_path).to eq users_path
+        expect(current_path).to eq admin_users_path
         expect(page).to have_content 'ユーザを削除しました'
       end
     end
-  
+
     context '一般ユーザがユーザ一覧画面にアクセスした場合' do
       before do
-        @user = FactoryBot.create(:user, admin: false)
+        @user = FactoryBot.create(:user, name: 'admin', email: 'admin0@example.com', password: 'password', password_confirmation: 'password', admin: false)
         visit new_session_path
-        fill_in 'メールアドレス', with: @user.email
-        fill_in 'パスワード', with: @user.password
+        fill_in 'メールアドレス', with: 'admin0@example.com'
+        fill_in 'パスワード', with: 'password'
         click_button 'ログイン'
       end
     
       it 'タスク一覧画面に遷移し、「管理者以外アクセスできません」というエラーメッセージが表示される' do
-        visit users_path
+        visit admin_users_path
         expect(current_path).to eq tasks_path
         expect(page).to have_content '管理者以外アクセスできません'
       end

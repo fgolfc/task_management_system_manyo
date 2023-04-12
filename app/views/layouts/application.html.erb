@@ -16,17 +16,17 @@
     <ul>
       <% if current_user %>
         <% if current_user.admin? %>
-          <li><%= link_to t("layouts.application.users_index"), users_path, id: "users-index" %></li>
+          <li><%= link_to t("layouts.application.users_index"), admin_users_path, id: "users-index" %></li>
         <% end %>
         <% if current_user.admin? %>
           <li><%= link_to t("users.new.register"), new_admin_user_path, id: "add-user" %></li>
         <% end %>
         <li><%= link_to t("layouts.application.tasks_index"), tasks_path %> </li>
         <li><%= link_to t("tasks.new.register"), new_task_path %></li>
-        <li><%= link_to t("layouts.application.update-user"), user_path(current_user) %></li>
+        <li><%= link_to t("layouts.application.update-user"), edit_user_path(current_user) %></li>
         <li><%= link_to t("layouts.application.sign_out"), logout_path, method: :delete, id: "sign-out" %></li>
       <% else %>
-        <li><%= link_to t("layouts.application.create_session"), new_user_path %></li>
+        <li><%= link_to t("layouts.application.sign_up"), new_user_path, id: "sign-up" %></li>
         <li><%= link_to t("layouts.application.sign_in"), new_session_path, id: "sign-in" %></li>
       <% end %>
     </ul>

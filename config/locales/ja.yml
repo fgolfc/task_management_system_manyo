@@ -139,22 +139,12 @@ ja:
   users:
     index:
       title: "ユーザ一覧ページ"
-      name: "名前"
-      email: "メールアドレス"
     new:
       title: "アカウント登録ページ"
       register: "ユーザを登録する"
-      name: "名前"
-      email: "メールアドレス"
-      password: "パスワード"
-      password_confirmation: "パスワード（確認）"
       create-user: "登録する"
     edit:
       title: "アカウント編集ページ"
-      name: "名前"
-      email: "メールアドレス"
-      password: "パスワード"
-      password_confirmation: "パスワード（確認）"
       back: "戻る"
       edit: "編集"
       update: "更新する"
@@ -168,6 +158,8 @@ ja:
       destroyed: "ユーザを削除しました"
   admin:
     users:
+      index:
+        title: "ユーザ一覧ページ"
       new:
         title: "ユーザ登録ページ"
       edit:
@@ -193,4 +185,4 @@ ja:
       sign_in: "ログイン"
       update-user: "アカウント設定"
       sign_out: "ログアウト"
-      create_session: "アカウント登録"
+      sign_up: "アカウント登録"

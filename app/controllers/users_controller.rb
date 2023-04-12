@@ -1,16 +1,19 @@
 class UsersController < ApplicationController
-  before_action :correct_user, only: [:show, :edit, :update, :destroy]
   before_action :require_admin, only: [:index, :destroy]
+  before_action :correct_user, only: [:show, :edit, :update, :destroy]
 
   def new
     @user = User.new
   end
-
-  def index
-    @users = User.all
-    @admin_users = @users.where(admin: true)
-  end
   
+  def index
+    if current_user.admin?
+      @users = User.all
+    else
+      redirect_to tasks_path, notice: "管理者以外アクセスできません"
+    end
+  end
+
   def admin_index
     @admin_users = User.where(admin: true)
   end
@@ -21,7 +24,7 @@ class UsersController < ApplicationController
       log_in(@user)
       redirect_to tasks_path, notice: t('.created')
     else
-      render :new
+      redirect_to new_user_path
     end
   end
 
@@ -36,7 +39,7 @@ class UsersController < ApplicationController
       params[:user].delete(:password_confirmation)
     end
     if @user.update(user_params)
-      redirect_to admin_user_path(@user), notice: t('.updated')
+      redirect_to user_path(@user), notice: t('.updated')
     else
       render :edit
     end
@@ -70,11 +73,6 @@ class UsersController < ApplicationController
     unless current_user
       flash[:alert] = t('common.please_log_in')
       redirect_to new_session_path
-    else
-      unless current_user.admin?
-        flash[:alert] = t('common.access_denied')
-        redirect_to root_path
-      end
     end
   end
   
@@ -85,23 +83,23 @@ class UsersController < ApplicationController
     redirect_to admin_user_path
   end
 
-  def require_admin
-    if current_user && !current_user.admin?
-      flash[:alert] = '管理者以外アクセスできません'
-      redirect_to tasks_path 
-    end
-  end
-  
   private
   
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :admin)
   end
   
   def correct_user
     @user = User.find(params[:id])
     if !current_user || (!current_user.admin? && current_user != @user)
-      redirect_to users_path, alert: t('common.access_denied')
+      redirect_to tasks_path, alert: '管理者以外アクセスできません'
+    end
+  end
+  
+  def require_admin
+    unless current_user && current_user.admin?
+      flash[:alert] = '管理者以外アクセスできません'
+      redirect_to tasks_path
     end
   end
 end

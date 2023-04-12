@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
     unless logged_in?
       store_location
       flash[:alert] = "ログインしてください"
-      redirect_to new_users_path
+      redirect_to new_session_path
     end
   end
 end
