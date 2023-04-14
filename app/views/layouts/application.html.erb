@@ -23,7 +23,7 @@
         <% end %>
         <li><%= link_to t("layouts.application.tasks_index"), tasks_path %> </li>
         <li><%= link_to t("tasks.new.register"), new_task_path %></li>
-        <li><%= link_to t("layouts.application.update-user"), edit_user_path(current_user) %></li>
+        <li><%= link_to t("layouts.application.account_settings"), user_path(current_user) %></li>
         <li><%= link_to t("layouts.application.sign_out"), logout_path, method: :delete, id: "sign-out" %></li>
       <% else %>
         <li><%= link_to t("layouts.application.sign_up"), new_user_path, id: "sign-up" %></li>

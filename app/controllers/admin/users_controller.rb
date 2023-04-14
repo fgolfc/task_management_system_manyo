@@ -96,7 +96,7 @@ class Admin::UsersController < ApplicationController
   def correct_user
     @user = User.find(params[:id])
     unless current_user.admin? || current_user == @user 
-      redirect_to edit_admin_user_path(@user)
+      redirect_to edit_admin_user_path(id: @user.id)
     end
   end
 

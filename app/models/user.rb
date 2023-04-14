@@ -4,11 +4,9 @@ class User < ApplicationRecord
   before_validation { email.downcase! }
   validates :email, uniqueness: { message: ' そのアドレスは使用できません' }, confirmation: true
   has_secure_password
-  validates :password, length: { minimum: 6 }, allow_blank: true
   validates :name, presence: true
   validates :email, presence: true
-  validates :password_confirmation, presence: true, if: :password
-  validates :password, confirmation: true, if: :password_confirmation
+  validates :password, presence: true, confirmation: true, length: { minimum: 6 }, allow_blank: true
   attribute :admin, :boolean, default: false
   has_many :tasks, dependent: :destroy
   before_destroy :check_last_admin

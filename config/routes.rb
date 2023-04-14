@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       get 'edit', to: 'users#edit', as: :edit_user
     end
   end
+  get '/users', to: 'users#index', as: :users
 
   get 'login', to: 'sessions#new', as: :new_session
   post 'login', to: 'sessions#create', as: :create_session

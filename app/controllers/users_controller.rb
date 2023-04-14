@@ -24,7 +24,7 @@ class UsersController < ApplicationController
       log_in(@user)
       redirect_to tasks_path, notice: t('.created')
     else
-      redirect_to new_user_path
+      render :new
     end
   end
 
@@ -47,6 +47,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    correct_user
   end
   
   def destroy
@@ -86,7 +87,7 @@ class UsersController < ApplicationController
   private
   
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :admin)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
   
   def correct_user
