@@ -1,12 +1,16 @@
 Rails.application.routes.draw do
   get 'users/new', to: 'users#new', as: :new_user
+  
+  namespace :admin do
+    resources :users, only: [:index]
+  end
 
   namespace :admin do
     resources :users do
       member do
         patch 'toggle_admin'
         get 'user/:id', to: 'users#show', as: :user_detail
-        get 'users'
+        get 'users' 
         get 'edit', to: 'users#edit', as: :edit_admin_user
       end
     end

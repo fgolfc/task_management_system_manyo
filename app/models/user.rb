@@ -2,7 +2,7 @@ class User < ApplicationRecord
   before_destroy :check_last_admin
   before_update :check_last_admin_change
   before_validation { email.downcase! }
-  validates :email, uniqueness: { message: ' そのアドレスは使用できません' }, confirmation: true
+  validates :email, uniqueness: { message: 'はすでに使用されています' }, confirmation: true
   has_secure_password
   validates :name, presence: true
   validates :email, presence: true

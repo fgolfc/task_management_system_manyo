@@ -19,7 +19,7 @@
           <li><%= link_to t("layouts.application.users_index"), admin_users_path, id: "users-index" %></li>
         <% end %>
         <% if current_user.admin? %>
-          <li><%= link_to t("users.new.register"), new_admin_user_path, id: "add-user" %></li>
+          <li><%= link_to t("users.new.register"), new_admin_user_path, id: "new-user" %></li>
         <% end %>
         <li><%= link_to t("layouts.application.tasks_index"), tasks_path %> </li>
         <li><%= link_to t("tasks.new.register"), new_task_path %></li>

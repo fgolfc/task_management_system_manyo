@@ -1,10 +1,14 @@
 class TasksController < ApplicationController
-  before_action :authenticate_user!, only: [:index]
+  before_action :authenticate_user!
   before_action :require_login
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
 
   def show
     @task = current_user.tasks.find(params[:id])
+    if current_user == @task.user
+    else 
+      redirect_to tasks_path, alert: '本人以外アクセスできません'
+    end
   end
 
   def new
@@ -46,6 +50,8 @@ class TasksController < ApplicationController
 
   def edit
     @task = current_user.tasks.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to tasks_path, alert: '本人以外アクセスできません'
   end
 
   def update
@@ -87,7 +93,7 @@ class TasksController < ApplicationController
   def require_login
     unless logged_in?
       flash[:alert] = t('common.please_log_in')
-      redirect_to login_path
+      redirect_to new_session_path
     end
   end
 
@@ -102,9 +108,8 @@ class TasksController < ApplicationController
   end
 
   def correct_user
-    @task = Task.find(params[:id])
-    unless current_user == @task.user
-      redirect_to tasks_path, alert: t('common.access_denied')
+    unless current_user == Task.find(params[:id]).user
+      redirect_to tasks_path, alert: '本人以外アクセスできません'
     end
   end
 end

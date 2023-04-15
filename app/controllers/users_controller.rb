@@ -22,7 +22,11 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       log_in(@user)
-      redirect_to tasks_path, notice: t('.created')
+      if @user.admin?
+        redirect_to admin_users_path, notice: t('.created')
+      else
+        redirect_to tasks_path, notice: t('.created')
+      end
     else
       render :new
     end
@@ -98,7 +102,7 @@ class UsersController < ApplicationController
   end
   
   def require_admin
-    unless current_user && current_user.admin?
+    unless current_user && current_user.admin? && current_user != @user
       flash[:alert] = '管理者以外アクセスできません'
       redirect_to tasks_path
     end
