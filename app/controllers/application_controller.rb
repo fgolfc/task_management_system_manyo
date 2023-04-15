@@ -31,11 +31,4 @@ class ApplicationController < ActionController::Base
       redirect_to root_url
     end
   end
-
-  def authenticate_user!
-    unless logged_in?
-      flash[:alert] = "ログインしてください"
-      redirect_to new_session_path
-    end
-  end
 end

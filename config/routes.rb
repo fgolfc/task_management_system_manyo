@@ -1,21 +1,4 @@
 Rails.application.routes.draw do
-  get 'users/new', to: 'users#new', as: :new_user
-  
-  namespace :admin do
-    resources :users, only: [:index]
-  end
-
-  namespace :admin do
-    resources :users do
-      member do
-        patch 'toggle_admin'
-        get 'user/:id', to: 'users#show', as: :user_detail
-        get 'users' 
-        get 'edit', to: 'users#edit', as: :edit_admin_user
-      end
-    end
-  end
-
   root 'tasks#index'
 
   resources :tasks do
@@ -27,9 +10,19 @@ Rails.application.routes.draw do
       get 'edit', to: 'users#edit', as: :edit_user
     end
   end
-  get '/users', to: 'users#index', as: :users
 
-  get 'login', to: 'sessions#new', as: :new_session
+  get '/signup', to: 'users#new', as: :new_user_form
+  post '/signup', to: 'users#create', as: :create_user
+
+  namespace :admin do
+    resources :users, only: [:index, :new, :create, :show, :edit, :update, :destroy] do
+      member do
+        patch 'toggle_admin'
+      end
+    end
+  end
+
   post 'login', to: 'sessions#create', as: :create_session
+  get 'login', to: 'sessions#new', as: :new_session
   delete 'logout', to: 'sessions#destroy', as: :logout
 end

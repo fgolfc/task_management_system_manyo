@@ -1,6 +1,5 @@
 class Admin::UsersController < ApplicationController
   before_action :require_admin, only: [:index, :destroy]
-  before_action :authenticate_user!, except: [:new, :create]
   before_action :correct_user, only: [:edit, :update]
 
   def new
@@ -63,20 +62,6 @@ class Admin::UsersController < ApplicationController
       redirect_to admin_users_path, flash: { error: t('common.access_denied') }
     else
       redirect_to admin_users_path, alert: t('common.access_denied')
-    end
-  end
-  
-  def authenticate_user!
-    unless current_user
-      flash[:alert] = t('common.please_log_in')
-      session[:forwarding_url] = request.url if request.get?
-      redirect_to new_session_path
-    else
-      @user = User.find_by(id: params[:id])
-      unless current_user.admin? || current_user == @user
-        flash[:alert] = t('common.access_denied')
-        redirect_to root_path
-      end
     end
   end
   

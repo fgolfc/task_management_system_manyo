@@ -25,12 +25,4 @@ module SessionsHelper
   def store_location
     session[:return_to] = request.original_url if request.get?
   end
-
-  def authenticate_user!
-    unless logged_in?
-      store_location
-      flash[:alert] = "ログインしてください"
-      redirect_to new_session_path
-    end
-  end
 end

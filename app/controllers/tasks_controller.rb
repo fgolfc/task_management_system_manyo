@@ -1,5 +1,4 @@
 class TasksController < ApplicationController
-  before_action :authenticate_user!
   before_action :require_login
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
 
@@ -94,12 +93,6 @@ class TasksController < ApplicationController
     unless logged_in?
       flash[:alert] = t('common.please_log_in')
       redirect_to new_session_path
-    end
-  end
-
-  def authenticate_user!
-    unless logged_in?
-      redirect_to new_session_path, notice: 'ログインしてください'
     end
   end
 

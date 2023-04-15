@@ -33,6 +33,6 @@
 
   <div class="actions">
     <%= form.submit t('helpers.submit.create.user', model: User.model_name.human), id: "create-user" %>
-    <%= link_to t('helpers.submit.create.user', model: User.model_name.human), new_user_path, id: "create-user" %>
+    <%= link_to t('helpers.submit.create.user', model: User.model_name.human), create_user_path, id: "create-user" %>
   </div>
 <% end %>

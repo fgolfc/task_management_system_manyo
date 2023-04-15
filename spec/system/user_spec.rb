@@ -4,7 +4,7 @@ RSpec.describe 'ユーザ管理機能', type: :system do
   describe '登録機能' do
     context 'ユーザを登録した場合' do
       it 'タスク一覧画面に遷移する' do
-        visit new_user_path
+        visit create_user_path
         fill_in '名前', with: 'テストユーザー'
         fill_in 'メールアドレス', with: 'test@example.com'
         fill_in 'パスワード', with: 'password'

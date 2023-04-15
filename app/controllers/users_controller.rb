@@ -2,8 +2,7 @@ class UsersController < ApplicationController
   before_action :require_admin, only: [:index, :destroy]
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
   before_action :redirect_to_task_page, only: [:new, :create]
-  before_action :authenticate_user!, only: [:new]
-  
+
   def new
     if current_user
       redirect_to tasks_path, notice: "すでにログインしています"
@@ -11,7 +10,7 @@ class UsersController < ApplicationController
       @user = User.new
     end
   end
-  
+
   def index
     if current_user.admin?
       @users = User.all
@@ -23,16 +22,12 @@ class UsersController < ApplicationController
   def admin_index
     @admin_users = User.where(admin: true)
   end
-  
+
   def create
     @user = User.new(user_params)
     if @user.save
       log_in(@user)
-      if @user.admin?
-        redirect_to admin_users_path, notice: t('.created')
-      else
-        redirect_to tasks_path, notice: t('.created')
-      end
+      redirect_to tasks_path, notice: t('.created')
     else
       render :new
     end
@@ -41,7 +36,7 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
   end
-  
+
   def update
     @user = User.find(params[:id])
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank? && current_user == @user
@@ -59,7 +54,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     correct_user
   end
-  
+
   def destroy
     @user = User.find(params[:id])
     if current_user.admin?
@@ -79,34 +74,27 @@ class UsersController < ApplicationController
       redirect_to users_path, alert: t('common.access_denied')
     end
   end
-  
-  def authenticate_user!
-    unless current_user
-      flash[:alert] = t('common.please_log_in')
-      redirect_to new_session_path
-    end
-  end
-  
+
   def toggle_admin
     @user = User.find(params[:id])
     @user.toggle(:admin)
     @user.save
-    redirect_to admin_user_path
+    redirect_to admin_user_path(@user)
   end
 
   private
-  
+
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
-  
+
   def correct_user
     @user = User.find(params[:id])
     unless current_user && (current_user.admin? || current_user == @user)
       redirect_to tasks_path, alert: '管理者以外アクセスできません'
     end
   end
-  
+
   def require_admin
     unless current_user && current_user.admin?
       flash[:alert] = '管理者以外アクセスできません'
@@ -118,9 +106,6 @@ class UsersController < ApplicationController
     if current_user
       flash[:notice] = "ログアウトしてください"
       redirect_to tasks_path
-    elsif request.fullpath == "/users/new"
-      flash[:alert] = "ログインしてください"
-      redirect_to new_session_path
     end
   end
 end

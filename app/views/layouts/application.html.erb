@@ -26,7 +26,7 @@
         <li><%= link_to t("layouts.application.account_settings"), user_path(current_user), id: "account-setting" %></li>
         <li><%= link_to t("layouts.application.sign_out"), logout_path, method: :delete, id: "sign-out" %></li>
       <% else %>
-        <li><%= link_to t("layouts.application.sign_up"), new_user_path, id: "sign-up" %></li>
+        <li><%= link_to t("layouts.application.sign_up"), new_user_form_path, id: "sign-up" %></li>
         <li><%= link_to t("layouts.application.sign_in"), new_session_path, id: "sign-in" %></li>
       <% end %>
     </ul>
