@@ -1,9 +1,15 @@
 class UsersController < ApplicationController
   before_action :require_admin, only: [:index, :destroy]
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
-
+  before_action :redirect_to_task_page, only: [:new, :create]
+  before_action :authenticate_user!, only: [:new]
+  
   def new
-    @user = User.new
+    if current_user
+      redirect_to tasks_path, notice: "すでにログインしています"
+    else
+      @user = User.new
+    end
   end
   
   def index
@@ -96,15 +102,25 @@ class UsersController < ApplicationController
   
   def correct_user
     @user = User.find(params[:id])
-    if !current_user || (!current_user.admin? && current_user != @user)
+    unless current_user && (current_user.admin? || current_user == @user)
       redirect_to tasks_path, alert: '管理者以外アクセスできません'
     end
   end
   
   def require_admin
-    unless current_user && current_user.admin? && current_user != @user
+    unless current_user && current_user.admin?
       flash[:alert] = '管理者以外アクセスできません'
       redirect_to tasks_path
+    end
+  end
+  
+  def redirect_to_task_page
+    if current_user
+      flash[:notice] = "ログアウトしてください"
+      redirect_to tasks_path
+    elsif request.fullpath == "/users/new"
+      flash[:alert] = "ログインしてください"
+      redirect_to new_session_path
     end
   end
 end

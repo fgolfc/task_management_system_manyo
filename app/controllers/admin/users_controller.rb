@@ -19,11 +19,7 @@ class Admin::UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       log_in(@user)
-      if @user.admin?
-        redirect_to admin_users_path, notice: t('.created')
-      else
-        redirect_to tasks_path, notice: t('.created')
-      end
+      redirect_to admin_users_path, notice: t('.created')
     else
       render :new
     end
