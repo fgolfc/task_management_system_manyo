@@ -1,8 +1,9 @@
 class SessionsController < ApplicationController
   include SessionsHelper
-  before_action :login_required, except: [:new, :create]
+  before_action :require_login, only: [:destroy]
 
   def new
+    redirect_to tasks_path if logged_in?
   end
 
   def create
@@ -12,19 +13,19 @@ class SessionsController < ApplicationController
       flash[:notice] = 'ログインしました'
       redirect_to tasks_path
     else
-      flash.now[:alert] = 'ログインに失敗しました'
+      flash.now[:alert] = 'メールアドレスまたはパスワードに誤りがあります'
       render 'new'
     end
   end
 
   def destroy
-    log_out if logged_in?
-    redirect_to tasks_path, notice: 'ログアウトしました'
+    log_out
+    redirect_to new_session_path, notice: 'ログアウトしました'
   end
 
   private
 
-  def login_required
+  def require_login
     unless logged_in?
       store_location
       flash[:alert] = "ログインしてください"

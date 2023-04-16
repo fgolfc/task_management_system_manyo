@@ -1,17 +1,13 @@
 class Admin::UsersController < ApplicationController
   before_action :correct_user, only: [:edit, :update]
-  before_action :require_admin, only: [:index, :destroy, :edit, :create, :show]
+  before_action :require_admin, only: [:index, :destroy, :edit, :update, :create, :show, :new, :toggle_admin]
   
   def new
     @user = User.new
   end
 
   def index
-    if current_user.admin?
-      @users = User.all
-    else
-      redirect_to tasks_path, notice: "管理者以外アクセスできません"
-    end
+    @users = User.all
   end
 
   def admin_index
@@ -21,9 +17,9 @@ class Admin::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      log_in(@user)
       redirect_to admin_users_path, notice: t('.created')
     else
+      flash.now[:alert] = t('admin.users.create_failed')
       render :new
     end
   end
@@ -52,20 +48,14 @@ class Admin::UsersController < ApplicationController
 
   def destroy
     @user = User.find(params[:id])
-    if current_user.admin?
-      if current_user == @user
-        redirect_to admin_users_path, flash: { error: t('common.access_denied') }
-      else
-        if @user.tasks.delete_all && @user.destroy
-          redirect_to admin_users_path, notice: t('.destroyed')
-        else
-          redirect_to admin_users_path, alert: t('.destroy_failed')
-        end
-      end
-    elsif current_user == @user
+    if current_user == @user
       redirect_to admin_users_path, flash: { error: t('common.access_denied') }
     else
-      redirect_to admin_users_path, alert: t('common.access_denied')
+      if @user.tasks.delete_all && @user.destroy
+        redirect_to admin_users_path, notice: t('.destroyed')
+      else
+        redirect_to admin_users_path, alert: t('.destroy_failed')
+      end
     end
   end
 
@@ -84,8 +74,8 @@ class Admin::UsersController < ApplicationController
 
   def correct_user
     @user = User.find(params[:id])
-    unless current_user.admin? || current_user == @user 
-      redirect_to edit_admin_user_path(id: @user.id)
+    unless current_user.admin? || (@user == current_user)
+      redirect_to admin_users_path, flash: { error: t('common.access_denied') }
     end
   end
 
