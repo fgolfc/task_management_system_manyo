@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :require_admin, only: [:index, :destroy]
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
   before_action :redirect_to_task_page, only: [:new, :create]
+  before_action :require_login, except: [:new, :create]
 
   def new
     if current_user
@@ -15,7 +16,8 @@ class UsersController < ApplicationController
     if current_user.admin?
       @users = User.all
     else
-      redirect_to tasks_path, notice: "管理者以外アクセスできません"
+      flash[:alert] = "管理者以外アクセスできません"
+      redirect_to tasks_path
     end
   end
 
@@ -102,6 +104,25 @@ class UsersController < ApplicationController
     end
   end
   
+  def require_login
+    unless logged_in?
+      redirect_to new_session_path, alert: 'ログインしてください'
+    end
+  end
+
+  def logged_in?
+    !!current_user
+  end
+
+  def log_in(user)
+    session[:user_id] = user.id
+  end
+
+  def log_out
+    session.delete(:user_id)
+    @current_user = nil
+  end
+
   def redirect_to_task_page
     if current_user
       flash[:notice] = "ログアウトしてください"

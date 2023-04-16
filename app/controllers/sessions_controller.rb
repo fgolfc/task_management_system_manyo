@@ -7,19 +7,19 @@ class SessionsController < ApplicationController
 
   def create
     user = User.find_by(email: params[:session][:email].downcase)
-    if user&.authenticate(params[:session][:password])
-      log_in user
-      redirect_back_or tasks_path, notice: 'ログインしました'
+    if user && user.authenticate(params[:session][:password])
+      log_in(user)
+      flash[:notice] = 'ログインしました'
+      redirect_to tasks_path
     else
-      flash.now[:danger] = 'メールアドレスまたはパスワードに誤りがあります'
-      render :new
+      flash.now[:alert] = 'ログインに失敗しました'
+      render 'new'
     end
   end
 
   def destroy
-    log_out
-    flash[:notice] = 'ログアウトしました'
-    redirect_back_or new_session_path
+    log_out if logged_in?
+    redirect_to tasks_path, notice: 'ログアウトしました'
   end
 
   private

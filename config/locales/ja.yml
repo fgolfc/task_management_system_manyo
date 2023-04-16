@@ -151,11 +151,11 @@ ja:
     show:
       title: "アカウント詳細ページ"
     create:
-      created: "ユーザを登録しました"
+      created: "アカウントを登録しました"
     update:
-      updated: "ユーザを更新しました"
+      updated: "アカウントを更新しました"
     destroy:
-      destroyed: "ユーザを削除しました"
+      destroyed: "アカウントを削除しました"
   admin:
     users:
       index:
