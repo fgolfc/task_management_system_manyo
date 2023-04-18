@@ -25,4 +25,5 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#create', as: :create_session
   get 'login', to: 'sessions#new', as: :new_session
   delete 'logout', to: 'sessions#destroy', as: :logout
+  get '/logout', to: 'sessions#destroy', as: :logout_get
 end

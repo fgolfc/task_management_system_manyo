@@ -1,7 +1,7 @@
 class Admin::UsersController < ApplicationController
   before_action :correct_user, only: [:edit, :update]
   before_action :require_admin, only: [:index, :destroy, :edit, :update, :create, :show, :new, :toggle_admin]
-  
+
   def new
     @user = User.new
   end
@@ -16,6 +16,7 @@ class Admin::UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+
     if @user.save
       redirect_to admin_users_path, notice: t('.created')
     else
@@ -35,20 +36,29 @@ class Admin::UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
+
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
       params[:user].delete(:password)
       params[:user].delete(:password_confirmation)
     end
+
     if @user.update(user_params)
       redirect_to admin_users_path, notice: t('.updated')
     else
+      if User.where(admin: true).count == 1
+        flash[:alert] = '管理者権限を持つアカウントが0件になるため更新できません'
+      end
       render 'admin/users/edit'
     end
   end
 
   def destroy
     @user = User.find(params[:id])
-    if current_user == @user
+  
+    if @user.admin? && User.where(admin: true).count == 1
+      flash[:alert] = '管理者権限を持つアカウントが0件になるため削除できません'
+      redirect_to admin_users_path
+    elsif current_user == @user
       redirect_to admin_users_path, flash: { error: t('common.access_denied') }
     else
       if @user.tasks.delete_all && @user.destroy
@@ -74,6 +84,7 @@ class Admin::UsersController < ApplicationController
 
   def correct_user
     @user = User.find(params[:id])
+
     unless current_user.admin? || (@user == current_user)
       redirect_to admin_users_path, flash: { error: t('common.access_denied') }
     end
@@ -82,7 +93,7 @@ class Admin::UsersController < ApplicationController
   def require_admin
     unless current_user&.admin?
       flash[:alert] = '管理者以外アクセスできません'
-      redirect_to tasks_path
+      redirect_to tasks_path, alert: '管理者以外アクセスできません'
     end
   end
 end

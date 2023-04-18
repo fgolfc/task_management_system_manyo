@@ -50,7 +50,7 @@ RSpec.describe 'ユーザ管理機能', type: :system do
       fill_in 'パスワード', with: 'password'
       click_button 'ログイン'
     end
-  
+
     context '管理者がログインした場合' do
       it 'ユーザ一覧画面にアクセスできる' do
         visit admin_users_path
@@ -98,13 +98,14 @@ RSpec.describe 'ユーザ管理機能', type: :system do
 
     context '一般ユーザがユーザ一覧画面にアクセスした場合' do
       before do
-        @user = FactoryBot.create(:user, name: 'admin', email: 'admin0@example.com', password: 'password', password_confirmation: 'password', admin: false)
+        visit logout_path
+        @user = FactoryBot.create(:user, name: 'user0', email: 'user0@example.com', password: 'password', password_confirmation: 'password', admin: false)
         visit new_session_path
-        fill_in 'メールアドレス', with: 'admin0@example.com'
+        fill_in 'メールアドレス', with: 'user0@example.com'
         fill_in 'パスワード', with: 'password'
         click_button 'ログイン'
       end
-    
+
       it 'タスク一覧画面に遷移し、「管理者以外アクセスできません」というエラーメッセージが表示される' do
         visit admin_users_path
         expect(current_path).to eq tasks_path

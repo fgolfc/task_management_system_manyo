@@ -17,7 +17,7 @@ class UsersController < ApplicationController
       @users = User.all
     else
       flash[:alert] = "管理者以外アクセスできません"
-      redirect_to tasks_path
+      redirect_to tasks_path, alert: "管理者以外アクセスできません"
     end
   end
 
@@ -100,18 +100,19 @@ class UsersController < ApplicationController
   def require_admin
     unless current_user && current_user.admin?
       flash[:alert] = '管理者以外アクセスできません'
-      redirect_to tasks_path
+      redirect_to tasks_path, alert: '管理者以外アクセスできません'
     end
   end
   
   def require_login
     unless logged_in?
+      session[:return_to] = request.url if request.get?
       redirect_to new_session_path, alert: 'ログインしてください'
     end
   end
-
+  
   def logged_in?
-    !!current_user
+    current_user.present?
   end
 
   def log_in(user)
