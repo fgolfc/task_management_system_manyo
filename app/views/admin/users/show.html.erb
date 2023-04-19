@@ -1,0 +1,44 @@
+<h1><%= t('.title') %></h1>
+<p>
+  <strong><%= User.human_attribute_name(:name) %></strong>
+  <%= @user.name %>
+</p>
+<p>
+  <strong><%= User.human_attribute_name(:email) %></strong>
+  <%= @user.email %>
+</p>
+<p>
+  <strong><%= User.human_attribute_name(:admin) %></strong>
+  <%= @user.admin? ? t('label.yes') : t('label.no') %>
+</p>
+
+<% if @tasks.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th><%= t("activerecord.attributes.task.title") %></th>
+        <th><%= t("activerecord.attributes.task.content") %></th>
+        <th><%= t("activerecord.attributes.task.created_at") %></th>
+        <th><%= t("activerecord.attributes.task.deadline_on") %></th>
+        <th><%= t("activerecord.attributes.task.priority") %></th>
+        <th><%= t("activerecord.attributes.task.status") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tasks.each do |task| %>
+        <tr>
+          <td><%= task.title %></td>
+          <td><%= task.content %></td>
+          <td><%= task.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+          <td><%= task.deadline_on %></td>
+          <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
+          <td><%= t("enums.task.status_enum.#{task.status}") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10) %>
+  <%= paginate @tasks %>
+<% end %>
+
+<%= link_to t('common.back'), admin_users_path, id: 'back' %>
