@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  resources :labels, path: 'labels' do
+    collection do
+      get 'new', as: 'new_label'
+      get ':id/edit', as: 'edit_label', action: :edit
+    end
+  end
+  
   root 'tasks#index'
 
   resources :tasks do

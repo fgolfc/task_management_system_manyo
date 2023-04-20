@@ -23,6 +23,8 @@
         <% end %>
         <li><%= link_to t("layouts.application.tasks_index"), tasks_path %> </li>
         <li><%= link_to t("tasks.new.register"), new_task_path %></li>
+        <li><%= link_to t("layouts.application.labels_index"), labels_path, id: "labels-index" %> </li>
+        <li><%= link_to t("labels.new.register"), new_label_path, id: "new-label" %></li>
         <li><%= link_to t("layouts.application.account_settings"), user_path(current_user), id: "account-setting" %></li>
         <li><%= link_to t("layouts.application.sign_out"), logout_path, method: :delete, id: "sign-out" %></li>
       <% else %>

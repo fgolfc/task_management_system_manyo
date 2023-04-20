@@ -3,6 +3,7 @@ ja:
     models:
       task: "タスク"
       user: "ユーザー"
+      label: "ラベル"
       session: "ログイン"
     attributes:
       task:
@@ -12,6 +13,7 @@ ja:
         deadline_on: "終了期限"
         priority: "優先度"
         status: "ステータス"
+        label_id: "ラベル"
       user:
         name: "名前"
         email: "メールアドレス"
@@ -22,6 +24,9 @@ ja:
       session:
         email: "メールアドレス"
         password: "パスワード"
+      label:
+        name: "名前"
+        tasks_count: "タスク数"
   label:
     "yes": "あり"
     "no": "なし"
@@ -55,10 +60,12 @@ ja:
         create:
           task: "%{model}を登録する"
           user: "%{model}を作成する"
+          label: "%{model}を登録する"
           session: "%{model}する"
         update:
           task: "%{model}を更新する"
           user: "%{model}を更新する"
+          label: "%{model}を更新する"
           session: "%{model}する"
   flash:
     danger: "ログインしてください"
@@ -80,6 +87,8 @@ ja:
     header:
       content: "内容"
       created_at: "作成日時"
+  errors:
+    not_found: "お探しのページは見つかりません。"
   common:
     show: "詳細"
     edit: "編集"
@@ -177,10 +186,31 @@ ja:
         title: "ログインページ"
     create:
       invalid_combination: "メールアドレスまたはパスワードが無効です"
+  labels:
+    index:
+      title: "ラベル一覧ページ"
+    new:
+      title: "ラベル登録ページ"
+      register: "ラベルを登録する"
+      create-label: "登録する"
+    edit:
+      title: "ラベル編集ページ"
+      back: "戻る"
+      edit: "編集"
+      update: "更新する"
+    show:
+      title: "アカウント詳細ページ"
+    create:
+      created: "ラベルを登録しました"
+    update:
+      updated: "ラベルを更新しました"
+    destroy:
+      destroyed: "ラベルを削除しました"
   layouts:
     application:
       users_index: "ユーザ一覧"
       tasks_index: "タスク一覧"
+      labels_index: "ラベル一覧"
       sign_up: "アカウント登録"
       sign_in: "ログイン"
       account_settings: "アカウント設定"

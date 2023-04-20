@@ -1,11 +1,15 @@
 class TasksController < ApplicationController
   before_action :require_login
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_labels 
+
+  def set_labels
+    @labels = Label.all 
+  end
 
   def show
     @task = current_user.tasks.find(params[:id])
-    if current_user == @task.user
-    else 
+    unless @task
       redirect_to tasks_path, alert: '本人以外アクセスできません'
     end
   end
@@ -21,10 +25,15 @@ class TasksController < ApplicationController
   end
 
   def index
-    @search_params = { search_title: search_title_param, status: status_param }
-    @user = current_user # 現在のユーザーを取得するためにこの行を追加する
+    @search_params = {
+      search_title: search_title_param,
+      status: status_param,
+      label_id: label_id_param
+    }
+  
+    @user = current_user
     if params.dig(:search).present?
-      @tasks = current_user.tasks.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
+      @tasks = current_user.tasks.search_tasks(search_title_param, status_param, label_id_param).page(params[:page]).per(10)
     else
       case params[:sort]
       when 'deadline_on_asc'
@@ -42,9 +51,9 @@ class TasksController < ApplicationController
     if @task.save
       redirect_to tasks_path
     else
-      flash.now[:alert] = t('.please_select_status')
+      flash.now[:alert] = t('.please_select_status_and_label')
       render :new
-    end
+    end 
   end
 
   def edit
@@ -55,11 +64,28 @@ class TasksController < ApplicationController
 
   def update
     @task = current_user.tasks.find(params[:id])
-
-    if @task.update(task_params)
-      redirect_to task_path(@task), notice: t('.updated')
+    
+    if params[:task][:label_ids].present?
+      label_ids = params[:task][:label_ids].reject(&:blank?).map(&:to_i)
+      if label_ids.any?(&:zero?)
+        flash.now[:alert] = "Invalid label ID"
+        render :edit
+        return
+      end
+      labels = Label.where(id: label_ids)
+      if labels.count != label_ids.count
+        missing_label_ids = label_ids - labels.pluck(:id)
+        flash.now[:alert] = "Couldn't find all Labels with 'id': #{missing_label_ids.join(', ')}"
+        render :edit
+        return
+      end
+    end
+    
+    if @task.update(task_params) 
+      redirect_to task_path(@task), notice: t('.updated') 
     else
-      render :edit
+      flash.now[:alert] = t('.please_select_status_and_label') 
+      render :edit 
     end
   end
 
@@ -77,8 +103,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:title, :content, :deadline_on, :priority, :status)
-          .merge(user_id: current_user.id)
+    params.require(:task).permit(:title, :content, :deadline_on, :priority, :status, { label_ids: [] })
   end
 
   def search_title_param
@@ -87,6 +112,10 @@ class TasksController < ApplicationController
 
   def status_param
     params.dig(:search, :status)
+  end
+
+  def label_id_param
+    params.dig(:search, :label_id)&.reject(&:blank?)
   end
 
   def require_login

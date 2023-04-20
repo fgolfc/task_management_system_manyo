@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= t('.title') %></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th><%= t("activerecord.attributes.label.name") %></th>
+      <th><%= t("activerecord.attributes.label.tasks_count") %></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @labels.each do |label| %>
+      <tr>
+        <td><%= label.name %></td>
+        <td></td>
+        <td><%= link_to t("common.edit"), edit_label_path(label), class: "edit-label" %></td>
+        <td><%= link_to t("common.destroy"), label, method: :delete, class: "destroy-label", data: { confirm: t('common.confirm_destroy') } %></td>
+        <td>
+          <% label.tasks.each do |task| %>
+            <%= task.name %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
