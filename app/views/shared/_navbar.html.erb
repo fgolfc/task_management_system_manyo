@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-end w-100">
+      <div class="me-auto">
+        <a class="navbar-brand" >Task App</a>
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav ms-auto d-flex justify-content-end">
+          <% if current_user %>
+            <% if current_user.admin? %>
+              <%= content_tag :a, t("layouts.application.users_index"), href: admin_users_path, class: "nav-item nav-link" %>
+              <%= content_tag :a, t("users.new.register"), href: new_admin_user_path, class: "nav-item nav-link" %>
+            <% end %>
+            <%= content_tag :a, t("layouts.application.tasks_index"), href: tasks_path, class: "nav-item nav-link" %>
+            <%= content_tag :a, t("tasks.new.register"), href: new_task_path, class: "nav-item nav-link" %>
+            <%= content_tag :a, t("layouts.application.labels_index"), href: labels_path, class: "nav-item nav-link" %>
+            <%= content_tag :a, t("labels.new.register"), href: new_label_path, class: "nav-item nav-link" %>
+            <%= content_tag :a, t("layouts.application.account_settings"), href: user_path(current_user), class: "nav-item nav-link" %>
+            <%= content_tag :a, t("layouts.application.sign_out"), href: logout_path, method: :delete, class: "nav-item nav-link" %>
+          <% else %>
+            <%= content_tag :a, t("layouts.application.sign_up"), href: new_user_form_path, class: "nav-item nav-link" %>
+            <%= content_tag :a, t("layouts.application.sign_in"), href: new_session_path, class: "nav-item nav-link" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

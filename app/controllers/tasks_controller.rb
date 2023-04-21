@@ -10,7 +10,8 @@ class TasksController < ApplicationController
   def show
     @task = current_user.tasks.find(params[:id])
     unless @task
-      redirect_to tasks_path, alert: '本人以外アクセスできません'
+      flash[:alert] = '本人以外アクセスできません'
+      redirect_to tasks_path
     end
   end
 
@@ -25,23 +26,28 @@ class TasksController < ApplicationController
   end
 
   def index
-    @search_params = {
-      search_title: search_title_param,
-      status: status_param,
-      label_id: label_id_param
-    }
-  
     @user = current_user
+    @q = current_user.tasks.ransack(params[:q])
     if params.dig(:search).present?
-      @tasks = current_user.tasks.search_tasks(search_title_param, status_param, label_id_param).page(params[:page]).per(10)
+      @search_params = {
+        search_title: search_title_param,
+        status: status_param,
+        label_id: label_id_param
+      }
+      @tasks = @q.result(distinct: true).search_tasks(
+        search_title_param,
+        status_param,
+        label_id_param
+      ).page(params[:page]).per(10)
+      @labels = current_user.labels
     else
       case params[:sort]
       when 'deadline_on_asc'
-        @tasks = current_user.tasks.order(deadline_on: :asc, created_at: :desc).page(params[:page]).per(10)
+        @tasks = @q.result(distinct: true).order(deadline_on: :asc, created_at: :desc).page(params[:page]).per(10)
       when 'priority_desc'
-        @tasks = current_user.tasks.order(priority: :desc, created_at: :desc).page(params[:page]).per(10)
+        @tasks = @q.result(distinct: true).order(priority: :desc, created_at: :desc).page(params[:page]).per(10)
       else
-        @tasks = current_user.tasks.order(created_at: :desc).page(params[:page]).per(10)
+        @tasks = @q.result(distinct: true).order(created_at: :desc).page(params[:page]).per(10)
       end
     end
   end
@@ -59,12 +65,13 @@ class TasksController < ApplicationController
   def edit
     @task = current_user.tasks.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    redirect_to tasks_path, alert: '本人以外アクセスできません'
+    flash[:alert] = '本人以外アクセスできません'
+    redirect_to tasks_path
   end
 
   def update
     @task = current_user.tasks.find(params[:id])
-    
+  
     if params[:task][:label_ids].present?
       label_ids = params[:task][:label_ids].reject(&:blank?).map(&:to_i)
       if label_ids.any?(&:zero?)
@@ -79,13 +86,20 @@ class TasksController < ApplicationController
         render :edit
         return
       end
-    end
-    
-    if @task.update(task_params) 
-      redirect_to task_path(@task), notice: t('.updated') 
     else
-      flash.now[:alert] = t('.please_select_status_and_label') 
-      render :edit 
+      labels = []
+    end
+  
+    if @task.label_belongs_to_user(label_ids)
+      if @task.update(task_params)
+        redirect_to task_path(@task), notice: t('.updated')
+      else
+        flash.now[:alert] = t('.please_select_status_and_label')
+        render :edit
+      end
+    else
+      flash.now[:alert] = "Label doesn't belong to user"
+      render :edit
     end
   end
 
@@ -115,7 +129,7 @@ class TasksController < ApplicationController
   end
 
   def label_id_param
-    params.dig(:search, :label_id)&.reject(&:blank?)
+    params.dig(:search, :label_id)&.split(',')&.reject(&:blank?)&.map(&:to_i)
   end
 
   def require_login

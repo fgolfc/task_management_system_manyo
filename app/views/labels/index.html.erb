@@ -21,7 +21,7 @@
         <td><%= link_to t("common.destroy"), label, method: :delete, class: "destroy-label", data: { confirm: t('common.confirm_destroy') } %></td>
         <td>
           <% label.tasks.each do |task| %>
-            <%= task.name %>
+            <%= task.title %>
           <% end %>
         </td>
       </tr>

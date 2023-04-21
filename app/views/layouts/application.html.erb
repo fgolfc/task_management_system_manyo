@@ -7,31 +7,13 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
   </head>
 
   <body>
-    <% flash.each do |key, value| %>
-      <p class="<%= key %>"><%= value %></p>
-    <% end %>
-    <ul>
-      <% if current_user %>
-        <% if current_user.admin? %>
-          <li><%= link_to t("layouts.application.users_index"), admin_users_path, id: "users-index" %></li>
-        <% end %>
-        <% if current_user.admin? %>
-          <li><%= link_to t("users.new.register"), new_admin_user_path, id: "add-user" %></li>
-        <% end %>
-        <li><%= link_to t("layouts.application.tasks_index"), tasks_path %> </li>
-        <li><%= link_to t("tasks.new.register"), new_task_path %></li>
-        <li><%= link_to t("layouts.application.labels_index"), labels_path, id: "labels-index" %> </li>
-        <li><%= link_to t("labels.new.register"), new_label_path, id: "new-label" %></li>
-        <li><%= link_to t("layouts.application.account_settings"), user_path(current_user), id: "account-setting" %></li>
-        <li><%= link_to t("layouts.application.sign_out"), logout_path, method: :delete, id: "sign-out" %></li>
-      <% else %>
-        <li><%= link_to t("layouts.application.sign_up"), new_user_form_path, id: "sign-up" %></li>
-        <li><%= link_to t("layouts.application.sign_in"), new_session_path, id: "sign-in" %></li>
-      <% end %>
-    </ul>
-    <%= yield %>
+    <%= render 'shared/navbar' %>
+    <div class="container">
+      <%= yield %>
+    </div>
   </body>
 </html>

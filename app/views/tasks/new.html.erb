@@ -1,56 +1,72 @@
-<h1><%= t(".title") %></h1>
+<div class="container">
+  <h1><%= t(".title") %></h1>
 
-<%= form_with(model: @task, local: true) do |form| %>
-  <% if @task.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= @task.errors.count %> 件のエラーが発生しました</h2>
+  <%= form_with(model: @task, local: true, html: { class: "form-horizontal" }) do |form| %>
+    <% if @task.errors.any? %>
+      <div class="alert alert-danger">
+        <h2><%= @task.errors.count %> 件のエラーが発生しました</h2>
 
-      <ul>
-      <% @task.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :title %><br>
-    <%= form.text_field :title %>
-  </div>
-
-  <div class="field">
-    <%= form.label :content %><br>
-    <%= form.text_area :content %>
-  </div>
-
-  <div class="field">
-    <%= form.label :deadline_on %>
-    <%= form.date_field :deadline_on %>
-  </div>
-
-  <div class="field">
-    <%= form.label :priority %>
-    <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, @task&.priority&.to_s), include_blank: true %>
-  </div>
-
-  <div class="field">
-    <%= form.label :status %>
-    <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status]), include_blank: true %>
-  </div>
-
-  <% if @labels.present? %>
-    <% @labels.each do |label| %>
-      <div class="field">
-        <%= form.check_box :label_ids, { multiple: true }, label.id, checked: @task.label_ids.include?(label.id) %>
-        <%= form.label "label_#{label.id}", label.name %>
+        <ul>
+        <% @task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
       </div>
     <% end %>
-  <% else %>
-    <p>No labels found.</p>
-  <% end %>
 
-  <div class="actions">
-    <%= form.submit t('helpers.submit.create', model: Task.model_name.human), id: "create-task" %>
-  </div>
-<% end %>
-<%= link_to t("common.back"), tasks_path, id: "back" %>
+    <div class="form-group">
+      <%= form.label :title, class: "control-label col-sm-2" %>
+      <div class="col-sm-10">
+        <%= form.text_field :title, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :content, class: "control-label col-sm-2" %>
+      <div class="col-sm-10">
+        <%= form.text_area :content, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :deadline_on, class: "control-label col-sm-2" %>
+      <div class="col-sm-10">
+        <%= form.date_field :deadline_on, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :priority, class: "control-label col-sm-2" %>
+      <div class="col-sm-10">
+        <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, @task&.priority&.to_s), { include_blank: true }, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :status, class: "control-label col-sm-2" %>
+      <div class="col-sm-10">
+        <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status]), { include_blank: true }, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :labels, "ラベル", class: "control-label col-sm-2" %>
+      <div class="col-sm-10">
+        <%= form.collection_check_boxes(:label_ids, Label.all, :id, :name) do |f| %>
+          <%= f.label { f.check_box + f.text } %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10 text-right">
+        <%= form.submit t('helpers.submit.create', model: Task.model_name.human), id: "create-task", class: "btn btn-primary" %>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10 text-right">
+        <%= link_to t("common.back"), tasks_path, id: "back", class: "btn btn-default" %>
+      </div>
+    </div>
+  <% end %>
+</div>

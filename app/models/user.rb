@@ -6,6 +6,7 @@ class User < ApplicationRecord
   validates :password, presence: true, confirmation: true, length: { minimum: 6 }, allow_blank: true
   attribute :admin, :boolean, default: false
   has_many :tasks, dependent: :destroy
+  has_many :labels, dependent: :destroy
 
   before_destroy do
     if admin? && User.where(admin: true).count == 1

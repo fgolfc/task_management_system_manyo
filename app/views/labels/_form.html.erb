@@ -1,7 +1,7 @@
 <%= form_with(model: label, local: true) do |form| %>
   <% if label.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(label.errors.count, "error") %> prohibited this label from being saved:</h2>
+      <h2><%= label.errors.count %> 件のエラーメッセージ</h2>
 
       <ul>
         <% label.errors.full_messages.each do |message| %>
@@ -26,6 +26,10 @@
   </div>
 
   <div class="actions">
-    <%= form.submit t('helpers.submit.create', model: Label.model_name.human) %>
+    <% if label.new_record? %>
+      <%= form.submit t('helpers.submit.create', model: Label.model_name.human) %>
+    <% else %>
+      <%= form.submit t('helpers.submit.update', model: Label.model_name.human) %>
+    <% end %>
   </div>
 <% end %>

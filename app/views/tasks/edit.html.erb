@@ -1,57 +1,60 @@
-<h1><%= t(".title") %></h1>
+<div class="container">
+  <h1 class="my-4"><%= t(".title") %></h1>
 
-<%= form_with(model: @task, url: task_path(@task), local: true) do |form| %>
-  <% if @task.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= @task.errors.count %> 件のエラーが発生しました</h2>
+  <%= form_with(model: @task, url: task_path(@task), local: true, html: { class: "my-4" }) do |form| %>
+    <% if @task.errors.any? %>
+      <div class="alert alert-danger">
+        <h2><%= @task.errors.count %> 件のエラーが発生しました</h2>
 
-      <ul>
-      <% @task.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title, id: :task_title %>
-  </div>
-
-  <div class="field">
-    <%= form.label :content %>
-    <%= form.text_area :content, id: :task_content %>
-  </div>
-
-  <div class="field">
-    <%= form.label :deadline_on %>
-    <%= form.date_field :deadline_on %>
-  </div>
-
-  <div class="field">
-    <%= form.label :priority %>
-    <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, selected: @task&.priority&.to_s) %>
-  </div>
-
-  <div class="field">
-    <%= form.label :status %>
-    <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status] || 'todo') %>
-  </div>
-
-  <% if @labels.present? %>
-    <% @labels.each do |label| %>
-      <div class="field">
-        <%= form.check_box :label_ids, { multiple: true }, label.id, checked: @task.label_ids.include?(label.id) %>
-        <%= form.label "label_#{label.id}", label.name %>
+        <ul>
+        <% @task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
       </div>
     <% end %>
-  <% else %>
-    <p>No labels found.</p>
+
+    <div class="form-group">
+      <%= form.label :title, class: "form-label mt-4" %>
+      <%= form.text_field :title, id: :task_title, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :content, class: "form-label mt-4" %>
+      <%= form.text_area :content, id: :task_content, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :deadline_on, class: "form-label mt-4" %>
+      <%= form.date_field :deadline_on, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :priority, class: "form-label mt-4" %>
+      <%= form.select :priority, options_for_select(Task.priorities.map { |label, _value| [t("enums.task.priority_enum.#{label}"), label.to_s] }, selected: @task&.priority&.to_s), { include_blank: true }, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :status, class: "form-label mt-4" %>
+      <%= form.select :status, options_for_select(Task.statuses.map { |label, _value| [t("enums.task.status_enum.#{label}"), label.to_s] }, selected: params[:status] || 'todo'), { include_blank: true }, class: "form-control" %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :labels, "ラベル", class: "form-label mt-4" %>
+      <br>
+      <%= form.collection_check_boxes(:label_ids, Label.all, :id, :name) do |f| %>
+        <div class="form-check">
+          <%= f.check_box class: "form-check-input" %>
+          <%= f.label class: "form-check-label" do %>
+            <%= f.text %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit t("common.update_task"), id: "update-task", class: "btn btn-primary mt-4" %>
+      <%= link_to t("common.back"), tasks_path, id: "back", class: "btn btn-secondary mt-4 ms-2" %>
+    </div>
   <% end %>
-
-  <div class="actions">
-    <%= form.submit t("common.update_task"), id: "update-task" %>
-  </div>
-<% end %>
-
-<%= link_to t("common.back"), tasks_path, id: "back" %>
+</div>
