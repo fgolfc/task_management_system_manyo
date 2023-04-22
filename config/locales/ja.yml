@@ -50,23 +50,23 @@ ja:
         too_short: "は%{count}文字以上で入力してください"
         confirmation: "が一致しません"
     helpers:
-      "yes": "あり"
-      "no": "なし"
-      submit:
-        show: "詳細"
-        edit: "編集"
-        destroy: "削除"
-        back: "戻る"
-        create:
-          task: "%{model}を登録する"
-          user: "%{model}を作成する"
-          label: "%{model}を登録する"
-          session: "%{model}する"
-        update:
-          task: "%{model}を更新する"
-          user: "%{model}を更新する"
-          label: "%{model}を更新する"
-          session: "%{model}する"
+  "yes": "あり"
+  "no": "なし"
+  submit:
+    show: "詳細"
+    edit: "編集"
+    destroy: "削除"
+    back: "戻る"
+    create:
+      task: "%{model}を登録する"
+      user: "%{model}を作成する"
+      label: "%{model}を登録する"
+      session: "%{model}する"
+    update:
+      task: "%{model}を更新する"
+      user: "%{model}を更新する"
+      label: "%{model}を更新する"
+      session: "%{model}する"
   flash:
     danger: "ログインしてください"
     notices:

@@ -1,11 +1,13 @@
-<h1><%= t('.title') %></h1>
-<p>
-  <strong><%= User.human_attribute_name(:name) %></strong>
-  <%= @user.name %>
-</p>
-<p>
-<strong><%= User.human_attribute_name(:email) %></strong>
-  <%= @user.email %>
-</p>
+<div class="container">
+  <h1><%= t('.title') %></h1>
+  <p>
+    <strong><%= User.human_attribute_name(:name) %></strong>
+    <%= @user.name %>
+  </p>
+  <p>
+    <strong><%= User.human_attribute_name(:email) %></strong>
+    <%= @user.email %>
+  </p>
 
-<%= link_to t('common.edit'), edit_user_path(@user), id: 'edit-user' %> 
+  <%= link_to t('common.edit'), edit_user_path(@user), class: "btn btn-primary", id: 'edit-user' %>
+</div>

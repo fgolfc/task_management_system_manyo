@@ -11,7 +11,7 @@
       </div>
       <div class="col">
         <%= f.label :label_id, t("activerecord.attributes.task.label_id"), class: "form-control w-100 text-left" %>
-        <%= form.select :label_id, options_from_collection_for_select(@labels, "id", "name", @search_params[:label_id]), { include_blank: true }, { class: "form-control w-100" } %>
+        <%= f.select :label_id, options_from_collection_for_select(@labels, "id", "name", @search_params&.[](:label_id)), { include_blank: true }, { class: "form-control w-100" } %>
       </div>
     </div>
     <div class="row mt-3">
@@ -44,8 +44,8 @@
           <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
           <td><%= t("enums.task.status_enum.#{task.status}") %></td>
           <td><%= link_to t("common.show"), task_path(task), class: "btn btn-primary show-task text-wrap" %></td>
-<td><%= link_to t("common.edit"), edit_task_path(task), class: "btn btn-primary edit-task text-wrap" %></td>
-<td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "btn btn-danger destroy-task text-wrap", data: {confirm: t('common.confirm_destroy') } %></td>
+          <td><%= link_to t("common.edit"), edit_task_path(task), class: "btn btn-primary edit-task text-wrap" %></td>
+          <td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "btn btn-danger destroy-task text-wrap", data: {confirm: t('common.confirm_destroy') } %></td>
           <td>
             <% task.labels.each do |label| %>
               <%= label.name %>

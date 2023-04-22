@@ -1,46 +1,48 @@
-<h1><%= t('.title') %></h1>
+<div class="container">
+  <h1><%= t('.title') %></h1>
 
-<%= form_with(model: @user, url: admin_user_path(@user), local: true) do |form| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= @user.errors.count %> 件のエラーメッセージ </h2>
+  <%= form_with(model: @user, url: admin_user_path(@user), local: true) do |form| %>
+    <% if @user.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= @user.errors.count %> 件のエラーメッセージ </h2>
 
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :email %>
+      <%= form.text_field :email, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password %>
+      <%= form.password_field :password, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password_confirmation %>
+      <%= form.password_field :password_confirmation, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :admin, User.human_attribute_name(:admin) %><br>
+      <%= form.check_box :admin %>
+    </div>
+
+    <div class="form-group">
+      <%= form.submit t('helpers.submit.update', model: User.model_name.human), id: "update-user", class: 'btn btn-primary' %>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email %>
-  </div>
-
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
-
-  <div class="field">
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
-
-  <div class="field">
-    <%= form.label :admin, User.human_attribute_name(:admin) %><br>
-    <%= form.check_box :admin %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit t('helpers.submit.update', model: User.model_name.human), id: "update-user" %>
-  </div>
-<% end %>
-
-<%= link_to t('common.back'), admin_users_path, id: 'back' %>
+  <%= link_to t('common.back'), admin_users_path, id: 'back', class: 'btn btn-secondary' %>
+</div>

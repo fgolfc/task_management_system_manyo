@@ -1,11 +1,6 @@
 class TasksController < ApplicationController
   before_action :require_login
   before_action :correct_user, only: [:show, :edit, :update, :destroy]
-  before_action :set_labels 
-
-  def set_labels
-    @labels = Label.all 
-  end
 
   def show
     @task = current_user.tasks.find(params[:id])
@@ -17,38 +12,43 @@ class TasksController < ApplicationController
 
   def new
     @task = current_user.tasks.build
+    @labels = current_user.labels
   end
 
   def search
-    @tasks = current_user.tasks.search_tasks(search_title_param, status_param).page(params[:page]).per(10)
-    @search_params = { search_title: search_title_param, status: status_param }
+    @labels = current_user.labels  
+    @tasks = current_user.tasks.search_tasks(search_title_param, status_param, label_id).page(params[:page]).per(10)
+    @search_params = { search_title: search_title_param, status: status_param, label_id: label_id }
     render 'index'
   end
 
   def index
     @user = current_user
-    @q = current_user.tasks.ransack(params[:q])
+    @tasks = current_user.tasks.includes(:labels)
+  
     if params.dig(:search).present?
       @search_params = {
         search_title: search_title_param,
         status: status_param,
-        label_id: label_id_param
+        label_id: label_id
       }
-      @tasks = @q.result(distinct: true).search_tasks(
+      @tasks = @tasks.search_tasks(
         search_title_param,
         status_param,
-        label_id_param
+        label_id
       ).page(params[:page]).per(10)
       @labels = current_user.labels
     else
       case params[:sort]
       when 'deadline_on_asc'
-        @tasks = @q.result(distinct: true).order(deadline_on: :asc, created_at: :desc).page(params[:page]).per(10)
+        @tasks = @tasks.order(deadline_on: :asc, created_at: :desc)
       when 'priority_desc'
-        @tasks = @q.result(distinct: true).order(priority: :desc, created_at: :desc).page(params[:page]).per(10)
+        @tasks = @tasks.order(priority: :desc, created_at: :desc)
       else
-        @tasks = @q.result(distinct: true).order(created_at: :desc).page(params[:page]).per(10)
+        @tasks = @tasks.order(created_at: :desc)
       end
+      @tasks = @tasks.page(params[:page]).per(10)
+      @labels = current_user.labels
     end
   end
 
@@ -64,6 +64,7 @@ class TasksController < ApplicationController
 
   def edit
     @task = current_user.tasks.find(params[:id])
+    @labels = current_user.labels
   rescue ActiveRecord::RecordNotFound
     flash[:alert] = '本人以外アクセスできません'
     redirect_to tasks_path
@@ -121,16 +122,16 @@ class TasksController < ApplicationController
   end
 
   def search_title_param
-    params.dig(:search, :search_title)&.strip
+    params.dig(:search, :search_title)
   end
 
   def status_param
     params.dig(:search, :status)
   end
-
-  def label_id_param
-    params.dig(:search, :label_id)&.split(',')&.reject(&:blank?)&.map(&:to_i)
-  end
+  
+  def label_id
+    params.dig(:search, :label_id)
+  end  
 
   def require_login
     unless logged_in?

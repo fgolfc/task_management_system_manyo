@@ -1,35 +1,37 @@
-<h1><%= t('.title') %></h1>
+<div class="container">
+  <h1><%= t('.title') %></h1>
 
-<table>
-  <thead>
-    <tr>
-      <th><%= User.human_attribute_name(:name) %></th>
-      <th><%= User.human_attribute_name(:email) %></th>
-      <th><%= User.human_attribute_name(:admin) %></th>
-      <th><%= User.human_attribute_name(:tasks_count) %></th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= User.human_attribute_name(:name) %></th>
+        <th><%= User.human_attribute_name(:email) %></th>
+        <th><%= User.human_attribute_name(:admin) %></th>
+        <th><%= User.human_attribute_name(:tasks_count) %></th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <% if @users %>
-      <% @users.includes(:tasks).each do |user| %>
-        <tr>
-          <td><%= user.name %></td>
-          <td><%= user.email %></td>
-          <td><%= user.admin? ? t('label.yes') : t('label.no') %></td>
-          <td><%= user.tasks.size %></td>
-          <td><%= link_to t('common.show'), current_user.admin? ? admin_user_path(user) : admin_users_path, class: 'show-user' %></td>
-          <td><%= link_to t('common.edit'), current_user.admin? ? edit_admin_user_path(user) : damin_users_path, class: 'edit-user' %></td>
-          <td>
-            <% if current_user && current_user.admin? %>
-            <%= link_to t('common.destroy'), admin_user_path(user), method: :delete, data: { confirm: t('common.confirm_destroy') }, class: 'destroy-user' %>
-          <% else %>
-            <%= t('common.destroy') %>
-          <% end %>
-          </td>
-        </tr>
+    <tbody>
+      <% if @users %>
+        <% @users.includes(:tasks).each do |user| %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.email %></td>
+            <td><%= user.admin? ? t('label.yes') : t('label.no') %></td>
+            <td><%= user.tasks.size %></td>
+            <td><%= link_to t('common.show'), current_user.admin? ? admin_user_path(user) : admin_users_path, class: 'btn btn-primary show-user' %></td>
+            <td><%= link_to t('common.edit'), current_user.admin? ? edit_admin_user_path(user) : admin_users_path, class: 'btn btn-primary edit-user' %></td>
+            <td>
+              <% if current_user && current_user.admin? %>
+                <%= link_to t('common.destroy'), admin_user_path(user), method: :delete, data: { confirm: t('common.confirm_destroy') }, class: 'btn btn-danger destroy-user' %>
+              <% else %>
+                <%= t('common.destroy') %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>

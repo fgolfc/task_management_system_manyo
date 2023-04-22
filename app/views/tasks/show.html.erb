@@ -1,35 +1,36 @@
-<h1><%= t(".title") %></h1>
+<div class="container">
+  <h1><%= t(".title") %></h1>
 
-<div>
-  <%= t("activerecord.attributes.task.title") %>
-  <%= @task.title %>
+  <div class="card">
+    <div class="card-body">
+      <div class="form-group">
+        <label><%= t("activerecord.attributes.task.title") %></label>
+        <p><%= @task.title %></p>
+      </div>
+      <div class="form-group">
+        <label><%= t("activerecord.attributes.task.content") %></label>
+        <p><%= @task.content %></p>
+      </div>
+      <div class="form-group">
+        <label><%= t("activerecord.attributes.task.deadline_on") %></label>
+        <p><%= @task.deadline_on %></p>
+      </div>
+      <div class="form-group">
+        <label><%= t("activerecord.attributes.task.priority") %></label>
+        <p><%= I18n.t("enums.task.priority_enum.#{@task[:priority]}") %></p>
+      </div>
+      <div class="form-group">
+        <label><%= t("activerecord.attributes.task.status") %></label>
+        <p><%= I18n.t("enums.task.status_enum.#{@task[:status]}") %></p>
+      </div>
+      <div class="form-group">
+        <label><%= t("activerecord.attributes.task.label_id") %></label>
+        <% @task.labels.each do |label| %>
+          <p><%= label.name %></p>
+        <% end %>
+      </div>
+      <%= link_to t("common.edit"), edit_task_path(@task), class: "btn btn-primary", id: "edit-task" %> |
+      <%= link_to t("common.back"), tasks_path, class: "btn btn-secondary", id: "back" %>
+    </div>
+  </div>
 </div>
-
-<div>
-  <%= t("activerecord.attributes.task.content") %>
-  <%= @task.content %>
-</div>
-
-<div>
-  <%= t("activerecord.attributes.task.deadline_on") %>
-  <%= @task.deadline_on %>
-</div>
-
-<div>
-  <%= t("activerecord.attributes.task.priority") %>
-  <%= I18n.t("enums.task.priority_enum.#{@task[:priority]}") %>
-</div>
-
-<div>
-  <%= t("activerecord.attributes.task.status") %>
-  <%= I18n.t("enums.task.status_enum.#{@task[:status]}") %>
-</div>
-<div>
-  <%= t("activerecord.attributes.task.label_id") %>
-  <% @task.labels.each do |label| %>
-    <%= label.name %>
-  <% end %>
-</div>
-
-<%= link_to t("common.edit"), edit_task_path(@task), id: "edit-task" %> |
-<%= link_to t("common.back"), tasks_path, id: "back" %>

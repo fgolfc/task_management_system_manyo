@@ -13,32 +13,34 @@
 </p>
 
 <% if @tasks.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th><%= t("activerecord.attributes.task.title") %></th>
-        <th><%= t("activerecord.attributes.task.content") %></th>
-        <th><%= t("activerecord.attributes.task.created_at") %></th>
-        <th><%= t("activerecord.attributes.task.deadline_on") %></th>
-        <th><%= t("activerecord.attributes.task.priority") %></th>
-        <th><%= t("activerecord.attributes.task.status") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @tasks.each do |task| %>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
         <tr>
-          <td><%= task.title %></td>
-          <td><%= task.content %></td>
-          <td><%= task.created_at.strftime('%Y/%m/%d %H:%M') %></td>
-          <td><%= task.deadline_on %></td>
-          <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
-          <td><%= t("enums.task.status_enum.#{task.status}") %></td>
+          <th><%= t("activerecord.attributes.task.title") %></th>
+          <th><%= t("activerecord.attributes.task.content") %></th>
+          <th><%= t("activerecord.attributes.task.created_at") %></th>
+          <th><%= t("activerecord.attributes.task.deadline_on") %></th>
+          <th><%= t("activerecord.attributes.task.priority") %></th>
+          <th><%= t("activerecord.attributes.task.status") %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @tasks.each do |task| %>
+          <tr>
+            <td><%= task.title %></td>
+            <td><%= task.content %></td>
+            <td><%= task.created_at.strftime('%Y/%m/%d %H:%M') %></td>
+            <td><%= task.deadline_on %></td>
+            <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
+            <td><%= t("enums.task.status_enum.#{task.status}") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
   <% @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10) %>
   <%= paginate @tasks %>
 <% end %>
 
-<%= link_to t('common.back'), admin_users_path, id: 'back' %>
+<%= link_to t('common.back'), admin_users_path, id: 'back', class: 'btn btn-secondary' %>

@@ -1,38 +1,48 @@
-<%= form_with(model: @user, local: true) do |form| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= @user.errors.count %> 件のエラーメッセージ </h2>
-
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
+<div class="container">
+  <% if @user.new_record? %>
+    <%= form_with(model: @user, url: create_user_path, local: true) do |form| %>
+  <% else %>
+    <%= form_with(model: @user, url: update_user_path(@user), local: true, method: "patch") do |form| %>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
+    <% if @user.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= @user.errors.count %> 件のエラーメッセージ </h2>
 
-  <div class="field">
-    <%= form.label :email %>
-    <%= form.text_field :email %>
-  </div>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div class="field">
-    <%= form.label :password %>
-    <%= form.password_field :password %>
-  </div>
+    <div class="form-group">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
 
-  <div class="field">
-    <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
+    <div class="form-group">
+      <%= form.label :email %>
+      <%= form.text_field :email, class: 'form-control' %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit t('helpers.submit.create.user', model: User.model_name.human), id: "create-user" %>
-    <%= link_to t('helpers.submit.create.user', model: User.model_name.human), create_user_path, id: "create-user" %>
-  </div>
-<% end %>
+    <div class="form-group">
+      <%= form.label :password %>
+      <%= form.password_field :password, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :password_confirmation %>
+      <%= form.password_field :password_confirmation, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <% if @user.new_record? %>
+        <%= form.submit t('helpers.submit.create', model: User.model_name.human), class: "btn btn-primary", id: "create-user" %>
+      <% else %>
+        <%= form.submit t('helpers.submit.update', model: User.model_name.human), class: "btn btn-primary", id: "update-user" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

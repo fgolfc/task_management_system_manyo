@@ -1,35 +1,33 @@
-<%= form_with(model: label, local: true) do |form| %>
-  <% if label.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= label.errors.count %> 件のエラーメッセージ</h2>
+<div class="container">
+  <%= form_with(model: label, local: true) do |form| %>
+    <% if label.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= label.errors.count %> 件のエラーメッセージ</h2>
 
-      <ul>
-        <% label.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div class="field">
-    <% Label.all.each do |label| %>
-      <div>
-        <%= form.check_box :label_ids, { multiple: true, include_hidden: false }, label.id, nil %>
-        <%= label.name %>
+        <ul>
+          <% label.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
       </div>
     <% end %>
-  </div>
 
-  <div class="actions">
-    <% if label.new_record? %>
-      <%= form.submit t('helpers.submit.create', model: Label.model_name.human) %>
-    <% else %>
-      <%= form.submit t('helpers.submit.update', model: Label.model_name.human) %>
-    <% end %>
-  </div>
-<% end %>
+    <div class="form-group">
+      <%= form.label :name %>
+      <%= form.text_field :name, class: 'form-control' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :label_ids, class: 'form-label' %>
+      <%= form.collection_check_boxes :label_ids, Label.all, :id, :name, class: 'form-check-input' %>
+    </div>
+
+    <div class="form-group">
+      <% if label.new_record? %>
+        <%= form.submit t('helpers.submit.create', model: Label.model_name.human), class: 'btn btn-primary' %>
+      <% else %>
+        <%= form.submit t('helpers.submit.update', model: Label.model_name.human), class: 'btn btn-primary' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

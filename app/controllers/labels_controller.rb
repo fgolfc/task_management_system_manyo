@@ -22,7 +22,8 @@ class LabelsController < ApplicationController
   # POST /labels or /labels.json
   def create
     @label = Label.new(label_params)
-
+    @label.user = current_user
+    
     respond_to do |format|
       if @label.save
         format.html { redirect_to @label, notice: t('.created') }
@@ -57,13 +58,13 @@ class LabelsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_label
-      @label = Label.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_label
+    @label = Label.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def label_params
-      params.require(:label).permit(:name, :task_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def label_params
+    params.require(:label).permit(:name, :description)
+  end
 end
