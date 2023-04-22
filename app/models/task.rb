@@ -13,7 +13,7 @@ class Task < ApplicationRecord
 
   validate :label_belongs_to_user
 
-  def label_belongs_to_user(label_ids)
+  def label_belongs_to_user
     label_ids.nil? || label_ids.empty? || labels.where(id: label_ids).count == label_ids.count
   end
 

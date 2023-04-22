@@ -10,6 +10,11 @@ FactoryBot.define do
     status { Task.statuses.keys.sample }
     association :user
 
+    after(:create) do |task|
+      labels = FactoryBot.create_list(:label, 3)
+      task.labels << labels
+    end
+
     factory :admin_task do
       association :user, factory: :admin_user
     end

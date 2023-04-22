@@ -102,7 +102,7 @@ RSpec.describe 'タスク管理機能', type: :system do
     let!(:task1) { FactoryBot.create(:task, user: user, title: 'first_task', created_at: 3.days.ago) }
     let!(:task2) { FactoryBot.create(:task, user: user, title: 'second_task', created_at: 2.days.ago) }
     let!(:task3) { FactoryBot.create(:task, user: user, title: 'third_task', created_at: 1.day.ago) }
-    let!(:task4) { FactoryBot.create(:task, user: user, title: 'forth_task', deadline_on: Date.new(2025, 02, 15), priority: :low, status: :done) }
+    let!(:task4) { FactoryBot.create(:task, user: user, title: 'forth_task', deadline_on: Date.new(2025, 02, 18), priority: :low, status: :done) }
   
     before do
       visit new_session_path
@@ -154,6 +154,25 @@ RSpec.describe 'タスク管理機能', type: :system do
         expect(page).not_to have_content(task2.title, wait: 10)
         expect(page).to have_content(task3.title, wait: 10)
         expect(page).not_to have_content(task4.title, wait: 10)
+      end
+    end
+
+    describe 'ラベルで検索をした場合' do
+      before do
+        label = FactoryBot.create(:label, name: 'label_name', user: user)
+        FactoryBot.create(:labeling, task: task1, label: label)
+        FactoryBot.create(:labeling, task: task2, label: label)
+        FactoryBot.create(:labeling, task: task3, label: label)
+        FactoryBot.create(:labeling, task: FactoryBot.create(:task, title: 'forth_task', deadline_on: Date.new(2025, 02, 18), priority: :low, status: :done, user: user), label: label)
+        select('label', from: 'label_id')
+        click_button('search_task')
+      end
+    
+      it "そのラベルの付いたタスクがすべて表示される" do
+        expect(page).to have_content(task1.title, wait: 10)
+        expect(page).to have_content(task2.title, wait: 10)
+        expect(page).to have_content(task3.title, wait: 10)
+        expect(page).to have_content(task4.title, wait: 10)
       end
     end
   end
