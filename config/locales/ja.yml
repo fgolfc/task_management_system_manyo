@@ -26,6 +26,7 @@ ja:
         password: "パスワード"
       label:
         name: "名前"
+        task_ids: "ラベル"
         tasks_count: "タスク数"
   label:
     "yes": "あり"

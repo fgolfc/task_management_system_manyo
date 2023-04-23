@@ -3,7 +3,8 @@ class LabelsController < ApplicationController
 
   # GET /labels or /labels.json
   def index
-    @labels = Label.all
+    @user = current_user
+    @labels = current_user.labels.includes(:tasks).select("labels.*, COUNT(tasks.id) as tasks_count").joins(:tasks).group("labels.id, tasks.id")
   end
 
   # GET /labels/1 or /labels/1.json
@@ -60,7 +61,7 @@ class LabelsController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_label
-    @label = Label.find(params[:id])
+    @label = current_user.labels.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.

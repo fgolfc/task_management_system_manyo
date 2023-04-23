@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :label do
-    name { "MyString" }
-
+    sequence(:name) { |n| "#{n}_label" }
+    association :user
     factory :labeled_task do
       after(:create) do |label|
         label.tasks << FactoryBot.create(:task)

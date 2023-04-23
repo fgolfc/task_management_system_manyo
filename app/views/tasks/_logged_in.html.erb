@@ -43,9 +43,9 @@
           <td><%= task.deadline_on %></td>
           <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
           <td><%= t("enums.task.status_enum.#{task.status}") %></td>
-          <td><%= link_to t("common.show"), task_path(task), class: "btn btn-primary show-task text-wrap" %></td>
-          <td><%= link_to t("common.edit"), edit_task_path(task), class: "btn btn-primary edit-task text-wrap" %></td>
-          <td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "btn btn-danger destroy-task text-wrap", data: {confirm: t('common.confirm_destroy') } %></td>
+          <td><%= link_to t("common.show"), task_path(task), class: "btn btn-primary show-task text-nowrap" %></td>
+<td><%= link_to t("common.edit"), edit_task_path(task), class: "btn btn-primary edit-task text-nowrap" %></td>
+<td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "btn btn-danger destroy-task text-nowrap", data: {confirm: t('common.confirm_destroy') } %></td>
           <td>
             <% task.labels.each do |label| %>
               <%= label.name %>

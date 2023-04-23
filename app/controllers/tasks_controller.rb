@@ -91,15 +91,10 @@ class TasksController < ApplicationController
       labels = []
     end
   
-    if @task.label_belongs_to_user(label_ids)
-      if @task.update(task_params)
-        redirect_to task_path(@task), notice: t('.updated')
-      else
-        flash.now[:alert] = t('.please_select_status_and_label')
-        render :edit
-      end
+    if @task.update(task_params)
+      redirect_to task_path(@task), notice: t('.updated')
     else
-      flash.now[:alert] = "Label doesn't belong to user"
+      flash.now[:alert] = t('.please_select_status_and_label')
       render :edit
     end
   end
@@ -131,7 +126,7 @@ class TasksController < ApplicationController
   
   def label_id
     params.dig(:search, :label_id)
-  end  
+  end
 
   def require_login
     unless logged_in?
