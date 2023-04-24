@@ -11,7 +11,8 @@
       </div>
       <div class="col">
         <%= f.label :label_id, t("activerecord.attributes.task.label_id"), class: "form-control w-100 text-left" %>
-        <%= f.select :label_id, options_from_collection_for_select(@labels, "id", "name", @search_params&.[](:label_id)), { include_blank: true }, { class: "form-control w-100" } %>
+        <% @search_params ||= {} %>
+        <%= f.collection_select :label_id_is, Label.all, :id, :name, { include_blank: true, selected: @search_params[:label_id_is] }, { class: "form-control w-100" } %>
       </div>
     </div>
     <div class="row mt-3">
