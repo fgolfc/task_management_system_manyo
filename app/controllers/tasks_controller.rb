@@ -31,16 +31,16 @@ class TasksController < ApplicationController
     search_params = params[:search] || {}
     @user = current_user
     if params.dig(:search).present?
-      @tasks = current_user.tasks.includes(:labels).search_tasks(search_title_param, status_param, search_label_param).page(params[:page]).per(10)
+      @tasks = current_user.tasks.includes(:labels).search_tasks(search_title_param, status_param, search_label_param).order(created_at: :desc)
   
       case params[:sort]
       when 'deadline_on_asc'
-        @tasks = @tasks.order(deadline_on: :asc, created_at: :desc)
+        @tasks = @tasks.order(deadline_on: :asc)
       when 'priority_desc'
-        @tasks = @tasks.order(priority: :desc, created_at: :desc)
-      else
-        @tasks = @tasks.order(created_at: :desc)
+        @tasks = @tasks.order(priority: :desc)
       end
+  
+      @tasks = @tasks.page(params[:page]).per(10)
     else
       case params[:sort]
       when 'deadline_on_asc'
@@ -50,10 +50,11 @@ class TasksController < ApplicationController
       else
         @tasks = current_user.tasks.includes(:labels).order(created_at: :desc)
       end
-    end
   
-    @labels = current_user.labels
+      @tasks = @tasks.page(params[:page]).per(10)
+    end
   end
+  
 
   def edit
     @task = current_user.tasks.find(params[:id])

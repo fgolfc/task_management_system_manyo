@@ -12,13 +12,11 @@
       <div class="col">
         <%= label_tag :label_id, t("activerecord.attributes.task.label_id"), class: "form-control w-100 text-left" %>
         <%= f.select :label_ids, [["すべて", nil]] + Label.all.map { |label| [label.name, label.id] }, { selected: params.dig(:search, :label_ids), include_blank: true }, { name: "search[label_ids]", class: "form-control w-100" } %>
-      </div>
-      <div class="col-md-3 mt-3 text-right">
-        <div class="row">
-          <div class="col">
-            <%= f.submit t("common.search"), class: "btn btn-primary btn-block", id: "search_task" %>
+          <div class="row">
+            <div class="col mt-3">
+              <%= f.submit t("common.search"), class: "btn btn-primary btn-block", id: "search_task" %>
+            </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
