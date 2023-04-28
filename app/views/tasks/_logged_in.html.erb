@@ -1,4 +1,4 @@
-<%= form_with url: tasks_path, method: :get, local: true, class: "form-inline" do |f| %>
+<%= form_with model: @task, method: :get, local: true, class: "form-inline" do |f| %>
   <div class="col justify-content-start">
     <div class="row row-cols-3">
       <div class="col">
@@ -10,14 +10,13 @@
         <%= f.text_field :search_title, name: 'search[search_title]', value: @search_params&.dig(:search_title), class: "search_input form-control w-100", id: "search_title" %>
       </div>
       <div class="col">
-        <%= f.label :label_id, t("activerecord.attributes.task.label_id"), class: "form-control w-100 text-left" %>
-        <% @search_params ||= {} %>
-        <%= f.collection_select :label_id_is, Label.all, :id, :name, { include_blank: true, selected: @search_params[:label_id_is] }, { class: "form-control w-100" } %>
+        <%= label_tag :label_id, t("activerecord.attributes.task.label_id"), class: "form-control w-100 text-left" %>
+        <%= f.select :label_ids, [["すべて", nil]] + Label.all.map { |label| [label.name, label.id] }, { selected: params.dig(:search, :label_ids), include_blank: true }, { name: "search[label_ids]", class: "form-control w-100" } %>
       </div>
-    </div>
-    <div class="row mt-3">
-      <div class="d-grid gap-2 col-3 ml-auto">
-        <%= f.submit t("common.search"), class: "btn btn-primary btn-block", id: "search_task" %>
+      <div class="col-md-3 mt-3">
+        <div class="row justify-content-end">
+          <%= f.submit t("common.search"), class: "btn btn-primary btn-block", id: "search_task" %>
+        </div>
       </div>
     </div>
   </div>
@@ -45,11 +44,11 @@
           <td><%= t("enums.task.priority_enum.#{task.priority}") %></td>
           <td><%= t("enums.task.status_enum.#{task.status}") %></td>
           <td><%= link_to t("common.show"), task_path(task), class: "btn btn-primary show-task text-nowrap" %></td>
-<td><%= link_to t("common.edit"), edit_task_path(task), class: "btn btn-primary edit-task text-nowrap" %></td>
-<td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "btn btn-danger destroy-task text-nowrap", data: {confirm: t('common.confirm_destroy') } %></td>
+          <td><%= link_to t("common.edit"), edit_task_path(task), class: "btn btn-primary edit-task text-nowrap" %></td>
+          <td><%= link_to t("common.destroy"), task_path(task), method: :delete, class: "btn btn-danger destroy-task text-nowrap", data: {confirm: t('common.confirm_destroy') } %></td>
           <td>
             <% task.labels.each do |label| %>
-              <%= label.name %>
+              <p><%= label.name %></p>
             <% end %>
           </td>
         </tr>

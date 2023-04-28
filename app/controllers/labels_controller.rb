@@ -59,9 +59,12 @@ class LabelsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_label
       @label = current_user.labels.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = 'ラベルが見つかりませんでした'
+      redirect_to labels_path
     end
 
     # Only allow a list of trusted parameters through.

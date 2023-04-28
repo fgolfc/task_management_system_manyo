@@ -6,7 +6,7 @@ class Task < ApplicationRecord
   validates :status, presence: true
   belongs_to :user
   has_many :task_labels, dependent: :destroy
-  has_many :labels, through: :task_labels, source: :label
+  has_many :labels, through: :task_labels
 
   enum priority: { low: 0, medium: 1, high: 2 }, _suffix: true
   enum status: { todo: 0, doing: 1, done: 2 }, _suffix: true
@@ -46,6 +46,6 @@ class Task < ApplicationRecord
     tasks = tasks.search_by_title(search_title) if search_title.present?
     tasks = tasks.filter_by_status(status) if status.present?
     tasks = tasks.joins(:labels).where(labels: { id: label_ids }) if label_ids.present?
-    tasks.in_status_order(status).order(created_at: :desc)
+    tasks.includes(:labels).order(created_at: :desc)
   end
 end
