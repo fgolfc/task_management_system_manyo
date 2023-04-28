@@ -29,8 +29,29 @@ class TasksController < ApplicationController
 
   def index
     search_params = params[:search] || {}
-    @tasks = Task.includes(:labels).search_tasks(search_params[:search_title], search_params[:status], search_params[:label_ids])
-    @tasks = @tasks.page(params[:page]).per(10)
+    @user = current_user
+    if params.dig(:search).present?
+      @tasks = current_user.tasks.includes(:labels).search_tasks(search_title_param, status_param, search_label_param).page(params[:page]).per(10)
+  
+      case params[:sort]
+      when 'deadline_on_asc'
+        @tasks = @tasks.order(deadline_on: :asc, created_at: :desc)
+      when 'priority_desc'
+        @tasks = @tasks.order(priority: :desc, created_at: :desc)
+      else
+        @tasks = @tasks.order(created_at: :desc)
+      end
+    else
+      case params[:sort]
+      when 'deadline_on_asc'
+        @tasks = current_user.tasks.includes(:labels).order(deadline_on: :asc, created_at: :desc)
+      when 'priority_desc'
+        @tasks = current_user.tasks.includes(:labels).order(priority: :desc, created_at: :desc)
+      else
+        @tasks = current_user.tasks.includes(:labels).order(created_at: :desc)
+      end
+    end
+  
     @labels = current_user.labels
   end
 
@@ -81,6 +102,10 @@ class TasksController < ApplicationController
 
   def search_title_param
     params.dig(:search, :search_title)
+  end
+
+  def search_label_param
+    params.dig(:search, :label_ids) || []
   end
 
   def status_param
