@@ -3,7 +3,7 @@
 
 <%= f.label :email, t('activerecord.attributes.session.email') %><br>
 <%= f.email_field :email %><br>
-<%= f.label :password, t('activerecord.attributes.session.password') %><br>
+<%= f.label :password, t('activerecord.attributes.session.password'), class: "mt-3" %><br>
 <%= f.password_field :password %><br>
-<%= f.submit t('enums.session.submit.login'), id: "create-session" %>
+<%= f.submit t('enums.session.submit.login'), id: "create-session", class: "btn btn-primary mt-3" %>
 <% end %>

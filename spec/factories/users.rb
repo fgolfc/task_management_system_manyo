@@ -1,9 +1,10 @@
+require 'date'
 require 'factory_bot_rails'
 
 FactoryBot.define do
   factory :admin_user, class: User do
-    sequence(:name) { |n| "admin#{n}" }
-    sequence(:email) { |n| "admin#{n}@example.com"}
+    sequence(:name, 2) { |n| "admin#{n}" }
+    sequence(:email, 2) { |n| "admin#{n}@example.com"}
     password { 'password' }
     password_confirmation { 'password' }
     admin { true }
@@ -16,8 +17,8 @@ FactoryBot.define do
   end
 
   factory :user, class: User do
-    sequence(:name) { |n| "user#{n}" }
-    sequence(:email) { |n| "user#{n}@example.com"}
+    sequence(:name, 2) { |n| "user#{n}" }
+    sequence(:email, 2) { |n| "user#{n}@example.com"}
     password { 'password' }
     password_confirmation { 'password' }
     admin { false }

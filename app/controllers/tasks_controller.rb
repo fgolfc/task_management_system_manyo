@@ -18,6 +18,10 @@ class TasksController < ApplicationController
   def create
     @task = current_user.tasks.build(task_params)
     @labels = current_user.labels
+    label_ids = params[:task][:label_ids].reject(&:blank?).map(&:to_i)
+    labels = Label.where(id: label_ids)
+    @task.labels = labels
+    
     if @task.save
       flash[:notice] = 'タスクを作成しました'
       redirect_to tasks_path

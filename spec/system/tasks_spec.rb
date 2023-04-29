@@ -99,10 +99,16 @@ RSpec.describe 'タスク管理機能', type: :system do
       
   describe '検索機能' do
     let!(:user) { FactoryBot.create(:user) }
-    let!(:task1) { FactoryBot.create(:task, user: user, title: 'first_task', created_at: 3.days.ago) }
-    let!(:task2) { FactoryBot.create(:task, user: user, title: 'second_task', created_at: 2.days.ago) }
-    let!(:task3) { FactoryBot.create(:task, user: user, title: 'third_task', created_at: 1.day.ago) }
-    let!(:task4) { FactoryBot.create(:task, user: user, title: 'forth_task', deadline_on: Date.new(2025, 02, 18), priority: :low, status: :done) }
+    let!(:label_1) { FactoryBot.create(:label, name: 'label_1', user: user) }
+    let!(:label_2) { FactoryBot.create(:label, name: 'label_2', user: user) }
+    let!(:label_3) { FactoryBot.create(:label, name: 'label_3', user: user) }
+    let!(:label_4) { FactoryBot.create(:label, name: 'label_4', user: user) }
+    let!(:label_5) { FactoryBot.create(:label, name: 'label_5', user: user) }
+
+    let!(:task1) { FactoryBot.create(:task, user: user, title: 'first_task', created_at: 3.days.ago, status: :todo, label_ids: [label_1.id, label_2.id]) }
+    let!(:task2) { FactoryBot.create(:task, user: user, title: 'second_task', created_at: 2.days.ago, status: :doing, label_ids: [label_2.id, label_3.id]) }
+    let!(:task3) { FactoryBot.create(:task, user: user, title: 'third_task', created_at: 1.day.ago, status: :done, label_ids: [label_3.id, label_4.id]) }
+    let!(:task4) { FactoryBot.create(:task, user: user, title: 'forth_task', deadline_on: Date.new(2025, 02, 18), priority: :low, status: :done, label_ids: [label_4.id, label_5.id]) }
   
     before do
       visit new_session_path
@@ -119,25 +125,26 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
   
       it "検索ワードを含むタスクのみ表示される" do
-        expect(page).to have_content(task2.title, wait: 10)
-        expect(page).to have_content(task3.title, wait: 10)
-        expect(page).not_to have_content(task1.title, wait: 10)
-        expect(page).not_to have_content(task4.title, wait: 10)
+        expect(page).to have_content(task2.title)
+        expect(page).to have_content(task3.title)
+        expect(page).not_to have_content(task1.title)
+        expect(page).not_to have_content(task4.title)
       end
     end
   
     describe 'ステータスで検索した場合' do
       before do
         visit tasks_path
+        fill_in 'search_title', with: ''
         select('完了', from: 'task_status')
         click_button('search_task')
       end
   
       it "検索したステータスに一致するタスクのみ表示される" do
-        expect(page).to have_content(task4.title, wait: 10)
-        expect(page).not_to have_content(task1.title, wait: 10)
-        expect(page).not_to have_content(task2.title, wait: 10)
-        expect(page).not_to have_content(task3.title, wait: 10)
+        expect(page).not_to have_content(task1.title)
+        expect(page).not_to have_content(task2.title)
+        expect(page).to have_content(task3.title)
+        expect(page).to have_content(task4.title)
       end
     end
   
@@ -150,29 +157,24 @@ RSpec.describe 'タスク管理機能', type: :system do
       end
   
       it "検索ワードをタイトルに含み、かつステータスに一致するタスクのみ表示される" do
-        expect(page).not_to have_content(task1.title, wait: 10)
-        expect(page).not_to have_content(task2.title, wait: 10)
-        expect(page).to have_content(task3.title, wait: 10)
-        expect(page).not_to have_content(task4.title, wait: 10)
+        expect(page).not_to have_content(task1.title)
+        expect(page).not_to have_content(task2.title)
+        expect(page).to have_content(task3.title)
+        expect(page).not_to have_content(task4.title)
       end
     end
 
     describe 'ラベルで検索をした場合' do
       before do
-        label = FactoryBot.create(:label, name: 'label_name', user: user)
-        FactoryBot.create(:labeling, task: task1, label: label)
-        FactoryBot.create(:labeling, task: task2, label: label)
-        FactoryBot.create(:labeling, task: task3, label: label)
-        FactoryBot.create(:labeling, task: FactoryBot.create(:task, title: 'forth_task', deadline_on: Date.new(2025, 02, 18), priority: :low, status: :done, user: user), label: label)
-        select('label', from: 'label_id')
+        select('label_2', from: 'label_ids')
         click_button('search_task')
       end
     
       it "そのラベルの付いたタスクがすべて表示される" do
-        expect(page).to have_content(task1.title, wait: 10)
-        expect(page).to have_content(task2.title, wait: 10)
-        expect(page).to have_content(task3.title, wait: 10)
-        expect(page).to have_content(task4.title, wait: 10)
+        expect(page).to have_content(task1.title)
+        expect(page).to have_content(task2.title)
+        expect(page).not_to have_content(task3.title)
+        expect(page).not_to have_content(task4.title)
       end
     end
   end

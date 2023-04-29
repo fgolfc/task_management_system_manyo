@@ -4,7 +4,7 @@ class LabelsController < ApplicationController
   # GET /labels or /labels.json
   def index
     @search_params = label_search_params
-    @labels = Label.search(@search_params).includes(:tasks)
+    @labels = Label.search(@search_params)
   end
 
   # GET /labels/1 or /labels/1.json

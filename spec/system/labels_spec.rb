@@ -1,22 +1,18 @@
 require 'rails_helper'
 
 RSpec.describe 'ラベル管理機能', type: :system do
-  before do
-    # ログインする
-    user = FactoryBot.create(:user, name: 'user0', email: 'user0@example.com', password: 'password', password_confirmation: 'password', admin: false)
-    visit new_session_path
-    fill_in 'メールアドレス', with: user.email
-    fill_in 'パスワード', with: user.password
-    click_button 'ログイン'
-  end
-
   describe '登録機能' do
     context 'ラベルを登録した場合' do
       it '登録したラベルが表示される' do
+        @user = FactoryBot.create(:user)
+        visit new_session_path
+        fill_in 'メールアドレス', with: @user.email
+        fill_in 'パスワード', with: 'password'
+        click_button 'ログイン'
         visit new_label_path
-        fill_in 'ラベル名', with: 'テストラベル'
+        fill_in '名前', with: 'テストラベル'
         click_button '登録する'
-        expect(current_path).to eq labels_path
+        expect(current_path).to eq label_path(Label.last.id)
         expect(page).to have_content 'テストラベル'
       end
     end

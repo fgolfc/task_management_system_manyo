@@ -57,7 +57,7 @@
   </table>
 </div>
 
-<% @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(10) %>
+<% @tasks = Task.all.order(created_at: :desc).page(params[:page]).per(20) %>
 <div class="pagination">
   <%= paginate @tasks %>
 </div>
