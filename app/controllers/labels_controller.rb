@@ -24,23 +24,23 @@ class LabelsController < ApplicationController
   def create
     @label = Label.new(label_params)
     @label.user = current_user
-
+  
     respond_to do |format|
       if @label.save
-        format.html { redirect_to @label, notice: t('.created') }
+        format.html { redirect_to labels_path, notice: t('.created') }
         format.json { render :show, status: :created, location: @label }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @label.errors, status: :unprocessable_entity }
       end
     end
-  end
+  end  
 
   # PATCH/PUT /labels/1 or /labels/1.json
   def update
     respond_to do |format|
       if @label.update(label_params)
-        format.html { redirect_to @label, notice: t('.updated') }
+        format.html { redirect_to labels_path, notice: t('.updated') }
         format.json { render :show, status: :ok, location: @label }
       else
         format.html { render :edit, status: :unprocessable_entity }
