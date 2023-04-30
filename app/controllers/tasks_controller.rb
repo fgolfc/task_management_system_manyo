@@ -4,11 +4,7 @@ class TasksController < ApplicationController
 
   def show
     @task = current_user.tasks.find(params[:id])
-    unless @task
-      flash[:alert] = '本人以外アクセスできません'
-      redirect_to tasks_path
-    end
-  end
+  end  
 
   def new
     @task = current_user.tasks.build
@@ -119,10 +115,6 @@ class TasksController < ApplicationController
   
   def label_id_param
     params.dig(:search, :label_id)
-  end
-
-  def label_search_params
-    params.fetch(:search, {}).permit(:name_cont, :label_ids)
   end
 
   def require_login
