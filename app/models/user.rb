@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  before_validation { email.downcase! }
+  before_validation { email.downcase! if email.present? }
   validates :email, uniqueness: { message: 'はすでに使用されています' }, confirmation: true, presence: true
   has_secure_password
   validates :name, presence: true
